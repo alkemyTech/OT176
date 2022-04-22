@@ -76,9 +76,6 @@ const userController = {
             })
         }
     },
-    imageUpload: (req, res) => {
-
-    }
 };
 
 module.exports = userController;
