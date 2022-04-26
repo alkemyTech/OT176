@@ -6,6 +6,6 @@ const commentsControllers = require('../controllers/commentsControllers')
 const commentValidator = require('../validations/comments');
 /* POST comments. */
 router.post('/', validate(commentValidator),authAdmin, commentsControllers.createComment);
-router.post('/', authAdmin, commentsControllers.createComment);
+router.get('/', authAdmin, commentsControllers.fetchAll);
 
 module.exports = router; 
