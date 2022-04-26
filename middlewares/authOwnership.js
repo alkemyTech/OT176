@@ -1,13 +1,14 @@
 const jwt = require('jsonwebtoken');
-const users = require('../utils/users');
+const { findById } = require('../utils/users');
 
 const authOwnership = async (req, res, next) => {
 	const token =
-		req.body.token || req.query.token || req.headers['x-access-token'];
+	req.cookies.token || req.body.token || req.query.token || req.headers['x-access-token'];
 
 	try {
-		const verifyToken = jwt.verify(token, 'secret'); //sent token
-		const user = await users.getById(verifyToken.id); //find user by token ID
+		const verifyToken = jwt.verify(token, process.env.SECRET); //sent token
+		const tokenId = verifyToken.id;
+		const user = await findById(tokenId);
 		const idParams = Number(req.params.id); //ID sent from params
 
 		if (user.id === idParams || user.roleId === 1) {
