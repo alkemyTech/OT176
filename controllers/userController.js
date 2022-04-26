@@ -8,6 +8,11 @@ const {
 } = require('uuid');
 const upload = require('../utils/multer')
 const s3 = require('../utils/s3')
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
+
+
+
 
 
 const userController = {
@@ -58,15 +63,28 @@ const userController = {
                     email: req.body.email,
                 }
             }).then((user) => {
-
                 if (user != undefined) {
                     if (bcrypt.compareSync(req.body.password, user.password)) {
                         console.log('User Authenticated')
 
+                        const token = jwt.sign({
+                                user_id: user.id
+                            },
+                            process.env.SECRET,
+                        )
+
+                        res.cookie('token', token, {
+                            expires: new Date(Date.now() + 900000),
+                            httpOnly: true
+                        })
+
+                
                         let response = {
-                            user
+                            user,
+                            token
                         }
                         res.json(response)
+
                     } else {
                         res.json('The password is incorrect')
                     }
@@ -74,12 +92,17 @@ const userController = {
                 } else {
                     res.json('User not found')
                 }
-            }).catch(() => {
-                let error = {
-                    ok: false
+            }).catch(/* (error) => { */
+
+                error => {
+                    console.log('error', error);
                 }
-                res.json(error)
-            })
+                /* let error = {
+                    ok: false,
+                    error
+                }
+                res.json(error) */
+            /* } */)
         }
     },
     awsImageUploader: (req, res) => {
