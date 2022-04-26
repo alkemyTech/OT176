@@ -1,15 +1,21 @@
 const jwt = require('jsonwebtoken');
-const users = require('../utils/users');
+const { findById } = require('../utils/users');
 
 //roleId 1 = admin; roleId 2 = user
 
 const authAdmin = async (req, res, next) => {
 	const token =
-		req.body.token || req.query.token || req.headers['x-access-token'];
+		req.cookies.token ||
+		req.body.token ||
+		req.query.token ||
+		req.headers['x-access-token'];
 
 	try {
-		const verifyToken = jwt.verify(token, 'secret');
-		const user = await users.getById(verifyToken.id);
+		const verifyToken = jwt.verify(token, process.env.SECRET);
+
+		const tokenId = verifyToken.id;
+
+		const user = await findById(tokenId);
 
 		if (!user) {
 			return res.status(404).json({
