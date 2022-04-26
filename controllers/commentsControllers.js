@@ -28,7 +28,7 @@ module.exports = {
       });
   },
 
-  // Create Role
+  // Create Comment
 
   createComment: async (req, res) => {
     await Comments.create({
@@ -45,7 +45,7 @@ module.exports = {
       });
   },
 
-  //Update Role
+  //Update Comment
 
   update: async (req, res) => {
     await Comments.findByPk(req.params.id)
@@ -53,18 +53,18 @@ module.exports = {
       .then(function (commentToUpdate) {
         commentToUpdate.user_id= req.body.user_id;
         commentToUpdate.body= req.body.body;
-        commmenToUpdate.news_id=req.body.news_id;
+        commentToUpdate.news_id=req.body.news_id;
         commentToUpdate.save();
       })
-      .then(function (updatedRole) {
-        res.status(200).json(updatedRole);
+      .then(function (updatedComment) {
+        res.status(200).json(updatedComment);
       })
       .catch(function (error) {
         res.status(500).json(error);
       });
   },
 
-  //Delete Role
+  //Delete Comment
 
   delete: async (req, res) => {
     await Comments.destroy({
@@ -72,8 +72,8 @@ module.exports = {
         id: req.params.id,
       },
     })
-      .then(function (deletedRole) {
-        res.status(200).json(deletedRole);
+      .then(function (deletedComment) {
+        res.status(200).json(deletedComment);
       })
       .catch(function (error) {
         res.status(500).json(error);
