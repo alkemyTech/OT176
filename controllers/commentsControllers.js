@@ -30,8 +30,9 @@ module.exports = {
 
   createComment: async (req, res) => {
     await Comments.create({
-      name: req.body.name,
-      description: req.body.description,
+      user_id: req.body.user_id,
+      body: req.body.body,
+      news_id: req.body.news_id
     })
 
       .then(function (comment) {
@@ -48,8 +49,9 @@ module.exports = {
     await Comments.findByPk(req.params.id)
 
       .then(function (commentToUpdate) {
-        commentToUpdate.name = req.body.name;
-        commentToUpdate.description = req.body.description;
+        commentToUpdate.user_id= req.body.user_id;
+        commentToUpdate.body= req.body.body;
+        commmenToUpdate.news_id=req.body.news_id;
         commentToUpdate.save();
       })
       .then(function (updatedRole) {
