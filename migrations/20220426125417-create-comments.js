@@ -9,8 +9,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       user_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER
+        allowNull:false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id'
+        }
       },
       body: {
         allowNull: false,
@@ -18,7 +22,11 @@ module.exports = {
       },
       news_id: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'News',
+          key: 'id'
+        }
       },
       deletedAt: {
         type: Sequelize.DATE
