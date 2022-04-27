@@ -95,6 +95,10 @@ const userController = {
             })
         }
     },
+    userDelete: (req, res, next) => {
+
+    },
+    // End User CRUD
     login: (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
