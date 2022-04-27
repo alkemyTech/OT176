@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('../utils/jwt');
 const {
 	findById
 } = require('../utils/users');
@@ -10,17 +10,12 @@ const authAdmin = async (req, res, next) => {
 
 	try {
 		if (token) {
-
-			console.log('token', token)
-			const verifyToken = jwt.verify(token, process.env.SECRET);
+			const verifyToken = await jwt.verifyToken(token, process.env.SECRET);
 			console.log('verifyToken', verifyToken)
 
 
-			let tokenId=verifyToken.user_id
+			let tokenId=verifyToken.id
 			const user = await findById(tokenId);
-
-
-
 
 			if (!user) {
 				return res.status(404).json({

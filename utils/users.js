@@ -1,9 +1,9 @@
 
-const db = require('../models/index');
+const db = require('../models');
 
 const findById = async (id) => {
       const user = await db.User.findByPk(id);
-      console.log('userAuth', user)
+      console.log('userAuth1', user)
       return user;
   };
 
