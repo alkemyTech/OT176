@@ -36,8 +36,13 @@ const updateTestimonial = async (req, res, next) => {
   try {
     const data = req.body;
     const id = req.params.id;
-    // codigo
-    res.json({ message: 'Actualizado Correctamente', data, id });
+    if (!id) throw new Error('Invalid Id');
+    const testimonial = await models.Testimonials.findByPk(id);
+    if (!testimonial) throw new Error('Item not found');
+    Object.assign(testimonial, data);
+    await testimonial.save();
+    
+    res.json({ testimonial });
   } catch (error) {
     next(error);
   }
