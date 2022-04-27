@@ -1,6 +1,11 @@
-var express = require('express');
-var router = express.Router();
+const { Router } = require("express");
 
-const activitieController = require('../controllers/activitieController')
+const router = Router();
+
+const { postActivities } = require("../controllers/activitieController");
+
+const { postValidator } = require("../middlewares/activitiesMiddlewares");
+
+router.post("/", postValidator, postActivities);
 
 module.exports = router;
