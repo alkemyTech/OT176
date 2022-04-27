@@ -3,10 +3,12 @@ const Comments = models.Comments;
 module.exports = {
   //Fetch all Comments
   fetchAll: async (req, res) => {
-    await Comments.findAll()
+    await Comments.findAll({
+      order: ['createdAt', 'DESC']
+    })
 
       .then(function (comments) {
-        res.status(200).json(comments);
+        res.status(200).json(comments.body);
       })
       .catch(function (error) {
         res.status(500).json(error);
@@ -27,6 +29,7 @@ module.exports = {
   },
 
   // Create Comment
+
   createComment: async (req, res) => {
     await Comments.create({
       user_id: req.body.user_id,
@@ -50,7 +53,7 @@ module.exports = {
       .then(function (commentToUpdate) {
         commentToUpdate.user_id= req.body.user_id;
         commentToUpdate.body= req.body.body;
-        commenToUpdate.news_id=req.body.news_id;
+        commentToUpdate.news_id=req.body.news_id;
         commentToUpdate.save();
       })
       .then(function (updatedComment) {
@@ -76,4 +79,4 @@ module.exports = {
         res.status(500).json(error);
       });
   },
-};
+}; 
