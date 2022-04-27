@@ -2,10 +2,17 @@ const { Router } = require("express");
 
 const router = Router();
 
-const { postActivities } = require("../controllers/activitieController");
+const {
+  postActivities,
+  putActivities,
+} = require("../controllers/activitieController");
 
-const { postValidator } = require("../middlewares/activitiesMiddlewares");
+const {
+  postValidator,
+  putValidator,
+} = require("../middlewares/activitiesMiddlewares");
 
 router.post("/", postValidator, postActivities);
+router.put("/:id", putValidator, putActivities);
 
 module.exports = router;

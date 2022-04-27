@@ -15,4 +15,18 @@ module.exports = {
       next(error);
     }
   },
+  putActivities: async (req, res, next) => {
+    try {
+      const { name, image, content } = req.body;
+      const { id } = req.params;
+
+      await Activity.update({ name, image, content }, { where: { id } });
+
+      const activityEdited = await Activity.findByPk(id);
+
+      res.status(200).json(activityEdited);
+    } catch (error) {
+      next(error);
+    }
+  },
 };
