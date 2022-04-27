@@ -23,5 +23,7 @@ module.exports = {
         "host": process.env.DB_HOST,
         "dialect": "mysql"
     },
-    "jwt_secret": process.env.JWT_SECRET
+    "jwt_secret": process.env.JWT_SECRET,
+    "sendgrid_key": process.env.SENGRID_KEY,
+    "sendgrid_verified": process.env.SENGRID_VERIFIED
 }
