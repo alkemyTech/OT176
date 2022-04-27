@@ -51,8 +51,11 @@ const updateTestimonial = async (req, res, next) => {
 const deleteTestimonial = async (req, res, next) => {
   try {
     const id = req.params.id;
-    // codigo
-    res.json({ message: 'Eliminado Correctamente', id });
+    if (!id) throw new Error('Invalid Id');
+    const testimonial = await models.Testimonials.findByPk(id);
+    if (!testimonial) throw new Error('Item not found');
+    await testimonial.destroy();
+    res.json({ message: 'Delete Success', testimonial });
   } catch (error) {
     next(error);
   }
