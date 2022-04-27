@@ -21,6 +21,15 @@ const userController = {
                 res.json(error);
             });
     },
+    findById: async (id) => {
+        try {
+            const user = await db.User.findByPk(id);
+            console.log('userAuth', user)
+            return user;
+        } catch (error) {
+            console.log('error', error)
+        }
+    },
     userEdit: (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

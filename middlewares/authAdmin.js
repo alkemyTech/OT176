@@ -1,7 +1,7 @@
 const jwt = require('../utils/jwt');
-const {
-	findById
-} = require('../utils/users');
+
+
+const { findById } = require('../controllers/userController');
 
 //roleId 1 = admin; roleId 2 = user
 
@@ -14,7 +14,7 @@ const authAdmin = async (req, res, next) => {
 			console.log('verifyToken', verifyToken)
 
 
-			let tokenId=verifyToken.id
+			let tokenId = verifyToken.id
 			const user = await findById(tokenId);
 
 			if (!user) {
@@ -31,6 +31,12 @@ const authAdmin = async (req, res, next) => {
 				});
 			}
 
+		} else {
+			return res.status(403).json({
+				data: {
+					msg: 'Token Not Found',
+				},
+			});
 		}
 		next();
 	} catch (error) {
