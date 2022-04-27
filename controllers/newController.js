@@ -1,11 +1,11 @@
-const db = require('../models');
+const db = require("../models");
 
 const newController = {
     //Find all news
 	list: async (req, res, next) => {
 		try {
 			const news = await db.New.findAll({
-				include: [{ association: 'Categories' }, { association: 'Users' }],
+				
 			});
 
 			return res.status(200).json({
@@ -69,41 +69,37 @@ const newController = {
 		}
 	},
 
-    // Soft delete news (updates deletedAt column)
+    // Delete
 
-	softDelete: async (req, res, next) => {
-		try {
-			const news = await db.New.update(
-				{ deletedAt: Date() },
-				{ where: { id: req.params.id } }
-			);
-
-			if (!news) {
-				return res.status(404).json({
-					success: false,
-					error: 'No news updated',
-				});
-			}
-
-			return res.status(201).json({
-				success: true,
-				data: {},
-			});
-		} catch (err) {
-			return res.status(500).json({
-				success: false,
-				error: 'Server Error',
-			});
-		}
-	},
+	delete: async (req, res, next) => {
+		try{
+            const news = await db.New.findByPk(req.params.id);
+    
+            if(!news)  {
+                return res.status(404).json({
+                    success: false,
+                    error: 'No data found'
+                });
+            }    
+            await news.destroy();
+    
+            return res.status(200).json({
+                success: true,
+                data:{}
+            });
+            }   
+            catch (err){
+            return res.status(500).json({
+                success: false,
+                error: 'Server Error'
+            });
+            }	},
 
     // find news detail
 
 	detail: async (req, res, next) => {
 		try {
-			const news = await db.New.findByPk(req.params.id, {
-				include: [{ association: 'Categories' }, { association: 'Users' }],
-			});
+			const news = await db.New.findByPk(req.params.id);
 
 			if (!news) {
 				return res.status(404).json({
