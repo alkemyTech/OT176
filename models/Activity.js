@@ -36,5 +36,5 @@ module.exports = (sequelize, DataTypes) => {
       paranoid: true,
     }
   );
-  return activitie;
+  return Activity;
 };
