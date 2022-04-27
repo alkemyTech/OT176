@@ -22,9 +22,11 @@ const getOneTestimonial = async (req, res, next) => {
 
 const createTestimonial = async (req, res, next) => {
   try {
-    const data = req.body;
-    // codigo
-    res.status(201).json({ message: 'Creado Correctamente', data });
+    const {name, content, image} = req.body
+    const newTestimonial = await models.Testimonials.create({name, content, image})
+    res
+      .status(201)
+      .json({ testimonial: newTestimonial })
   } catch (error) {
     next(error);
   }
