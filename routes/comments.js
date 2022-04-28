@@ -8,4 +8,4 @@ const commentValidator = require('../validations/comments');
 router.post('/', validate(commentValidator),authOwnership, commentsControllers.createComment);
 router.get('/', authAdmin, commentsControllers.fetchAll);
 
-module.exports = router; 
+module.exports = router;  

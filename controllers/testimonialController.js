@@ -28,7 +28,7 @@ const createTestimonial = async (req, res, next) => {
       .status(201)
       .json({ testimonial: newTestimonial })
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
