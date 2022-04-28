@@ -1,29 +1,30 @@
-const models = require("../models");
-const Comments = models.Comments;
+const models = require('../models');
+
+const { Comments } = models;
 module.exports = {
-  //Fetch all Comments
+  // Fetch all Comments
   fetchAll: async (req, res) => {
     await Comments.findAll({
-      order: ['createdAt', 'DESC']
+      order: ['createdAt', 'DESC'],
     })
 
-      .then(function (comments) {
+      .then((comments) => {
         res.status(200).json(comments.body);
       })
-      .catch(function (error) {
+      .catch((error) => {
         res.status(500).json(error);
       });
   },
 
-  //Fetch a Comments
+  // Fetch a Comments
 
   fetchOne: async (req, res) => {
     await Comments.findByPk(req.params.id)
 
-      .then(function (comment) {
+      .then((comment) => {
         res.status(200).json(comment);
       })
-      .catch(function (error) {
+      .catch((error) => {
         res.status(500).json(error);
       });
   },
@@ -34,37 +35,37 @@ module.exports = {
     await Comments.create({
       user_id: req.body.user_id,
       body: req.body.body,
-      news_id: req.body.news_id
+      news_id: req.body.news_id,
     })
 
-      .then(function (comment) {
+      .then((comment) => {
         res.status(200).json(comment);
       })
-      .catch(function (error) {
+      .catch((error) => {
         res.status(500).json(error);
       });
   },
 
-  //Update Comment
+  // Update Comment
 
   update: async (req, res) => {
     await Comments.findByPk(req.params.id)
 
-      .then(function (commentToUpdate) {
-        commentToUpdate.user_id= req.body.user_id;
-        commentToUpdate.body= req.body.body;
-        commentToUpdate.news_id=req.body.news_id;
+      .then((commentToUpdate) => {
+        commentToUpdate.user_id = req.body.user_id;
+        commentToUpdate.body = req.body.body;
+        commentToUpdate.news_id = req.body.news_id;
         commentToUpdate.save();
       })
-      .then(function (updatedComment) {
+      .then((updatedComment) => {
         res.status(200).json(updatedComment);
       })
-      .catch(function (error) {
+      .catch((error) => {
         res.status(500).json(error);
       });
   },
 
-  //Delete Comment
+  // Delete Comment
 
   delete: async (req, res) => {
     await Comments.destroy({
@@ -72,11 +73,11 @@ module.exports = {
         id: req.params.id,
       },
     })
-      .then(function (deletedComment) {
+      .then((deletedComment) => {
         res.status(200).json(deletedComment);
       })
-      .catch(function (error) {
+      .catch((error) => {
         res.status(500).json(error);
       });
   },
-}; 
+};

@@ -1,28 +1,25 @@
 const {
-   check,
-   validationResult
+  check,
+  validationResult,
 } = require('express-validator');
 
-
 const imageValidator = [
-   check('image')
-   .custom((value, {
+  check('image')
+    .custom((value, {
       req,
-   }) => {
-      let file = req.file;
+    }) => {
+      const { file } = req;
 
       if (!file) {
-         throw new Error('You must complete the image field');
+        throw new Error('You must complete the image field');
       } else {
-         let fileExtension = (file.originalname);
-         if (!fileExtension.match(/.(jpg|jpeg|png|gif)$/i)) {
-            throw new Error('The file must be JPG, JEPG, PNG or GIF')
-         }
+        const fileExtension = (file.originalname);
+        if (!fileExtension.match(/.(jpg|jpeg|png|gif)$/i)) {
+          throw new Error('The file must be JPG, JEPG, PNG or GIF');
+        }
       }
       return true;
-   }),
-]
+    }),
+];
 
-
-
-module.exports = imageValidator
+module.exports = imageValidator;

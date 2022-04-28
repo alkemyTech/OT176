@@ -1,5 +1,5 @@
-const sgMail = require('@sendgrid/mail')
-const config = require('../config/config')
+const sgMail = require('@sendgrid/mail');
+const config = require('../config/config');
 
 /**
  * sendMail function to send email
@@ -12,26 +12,26 @@ const config = require('../config/config')
 const sendMail = async (toEmail, subject, message, next = false) => {
   try {
     if (config.sendgrid_key) {
-      sgMail.setApiKey(config.sendgrid_key)
+      sgMail.setApiKey(config.sendgrid_key);
 
       const msg = {
         to: toEmail,
         from: config.sendgrid_verified,
-        subject: subject,
-        html: message
-      }
+        subject,
+        html: message,
+      };
 
-      const sending = await sgMail.send(msg)
+      const sending = await sgMail.send(msg);
       if (sending) {
-        return sending
+        return sending;
       }
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     if (next) {
-      next(error)
+      next(error);
     }
   }
-}
+};
 
-module.exports = sendMail
+module.exports = sendMail;

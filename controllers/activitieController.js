@@ -1,4 +1,4 @@
-const { Activity } = require("../models/index");
+const { Activity } = require('../models/index');
 
 module.exports = {
   postActivities: async (req, res, next) => {
@@ -8,7 +8,7 @@ module.exports = {
       const activity = await Activity.create({ name, image, content });
 
       res.status(201).json({
-        message: "Activity created successfully",
+        message: 'Activity created successfully',
         activity,
       });
     } catch (error) {

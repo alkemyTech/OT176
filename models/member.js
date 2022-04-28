@@ -1,7 +1,7 @@
-'use strict';
 const {
-  Model
+  Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Member extends Model {
     /**
@@ -12,30 +12,30 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  };
+  }
   Member.init({
     name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notNull: {
-          msg: 'The name should be provided!'
+          msg: 'The name should be provided!',
         },
         notEmpty: {
-          msg: 'The name field can not be empty!'
+          msg: 'The name field can not be empty!',
         },
         isAlpha: {
-          msg: 'Names only contains letters!'
+          msg: 'Names only contains letters!',
         },
         len: {
           args: [3, 10],
-          msg: 'Only names with length between 3 and 10 are allowed'
-        }
-      }
+          msg: 'Only names with length between 3 and 10 are allowed',
+        },
+      },
     },
     facebookUrl: {
       type: DataTypes.STRING,
-      allowNull:true
+      allowNull: true,
     },
     instagramUrl: {
       type: DataTypes.STRING,
@@ -43,29 +43,29 @@ module.exports = (sequelize, DataTypes) => {
     },
     linkedinUrl: {
       type: DataTypes.STRING,
-      allowNull:true,
-      
+      allowNull: true,
+
     },
     image: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notNull: {
-          msg: 'The image should be provided!'
+          msg: 'The image should be provided!',
         },
         notEmpty: {
-          msg: 'The image field can not be empty!'
-        }
-      }
+          msg: 'The image field can not be empty!',
+        },
+      },
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
     is_deleted: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
-      defaultValue: false
+      defaultValue: false,
     },
   }, {
     timestamps: true,
