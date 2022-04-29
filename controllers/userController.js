@@ -112,7 +112,7 @@ const userController = {
     });
 
     try {
-      if (user !== undefined) {
+      if (user) {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           console.log('User Authenticated');
 
@@ -135,7 +135,9 @@ const userController = {
         res.json('User not found');
       }
     } catch (error) {
-      console.log(error);
+      res.status(500).json({
+        msg: 'Please contact the administrator',
+      });
     }
   },
   getData: async (req = request, res = response) => {
