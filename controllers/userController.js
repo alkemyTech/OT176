@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const db = require('../models');
+const { createToken } = require('../utils/jwt');
 
 const userController = {
 
@@ -96,55 +97,46 @@ const userController = {
       }
     });
   },
-  userDelete: (req, res, next) => {
-
-  },
   // End User CRUD
-  login: (req, res) => {
+  login: async(req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array(),
       });
     }
-    db.User.findOne({
+    const user = await db.User.findOne({
       where: {
         email: req.body.email,
       },
-    }).then((user) => {
-      if (user != undefined) {
+    });
+
+    try {
+      if (user !== undefined) {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           console.log('User Authenticated');
 
-          const token = jwt.sign(
-            {
-              userId: user.id,
-            },
-            process.env.SECRET,
-          );
+          const token = createToken(user.id);
 
           res.cookie('token', token, {
             expires: new Date(Date.now() + 900000),
             httpOnly: true,
           });
-
-          const response = {
+          res.status(200).json({
             user,
             token,
-          };
-          res.json(response);
+          });
         } else {
-          res.json('The password is incorrect');
+          res.status(401).json({
+            msg: 'The password is incorrect',
+          });
         }
       } else {
         res.json('User not found');
       }
-    }).catch(() => {
-      const error = {
-        ok: false,
-      };
-      res.json(error);
-    });
+    } catch (error) {
+      console.log(error);
+    }
   },
   getData: async (req = request, res = response) => {
     const { token } = req.headers;
