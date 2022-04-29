@@ -5,7 +5,7 @@ module.exports = {
   // Fetch all Comments
   fetchAll: async (req, res) => {
     await Comments.findAll({
-      order: ['createdAt', 'DESC'],
+      order: [['createdAt', 'DESC']],
     })
 
       .then((comments) => {
