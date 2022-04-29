@@ -5,8 +5,7 @@ const contactController = require('../controllers/contactController');
 const authAdmin = require('../middlewares/authAdmin');
 
 /* GET */
-router.get('/', contactController.list);
+router.get('/contacts', authAdmin, contactController.list);
 /* POST */
-router.post('/', authAdmin, contactController.store);
 
 module.exports = router;
