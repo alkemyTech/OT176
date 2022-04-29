@@ -5,5 +5,7 @@ const authAdmin = require('../middlewares/authOwnership')
 
 /* GET */
 router.get("/", authAdmin, contactController.list);
+/* POST */
+router.post("/", authAdmin, contactController.store);
 
 module.exports = router;
