@@ -20,19 +20,19 @@ module.exports = {
   },
   userId: {
     notEmpty: {
-      errorMessage: 'image is required',
+      errorMessage: 'User is required',
       bail: true,
     },
   },
   categoryId: {
     notEmpty: {
-      errorMessage: 'image is required',
+      errorMessage: 'CategoryId is required',
       bail: true,
     },
   },
   type: {
     notEmpty: {
-      errorMessage: 'image is required',
+      errorMessage: 'type is required',
       bail: true,
     },
   },
