@@ -118,7 +118,7 @@ const userController = {
 
           const token = jwt.sign(
             {
-              user_id: user.id,
+              userId: user.id,
             },
             process.env.SECRET,
           );
@@ -184,12 +184,12 @@ const userController = {
     }
   },
   delete: async (req = request, res = response) => {
-    const user_id = Number(req.params.id);
+    const userId = Number(req.params.id);
 
     try {
       const user = await db.User.findOne({
         where: {
-          id: user_id,
+          id: userId,
           is_deleted: false,
         },
       });
@@ -202,7 +202,7 @@ const userController = {
         });
       } else {
         res.status(404).json({
-          msg: `No users with id: ${user_id}, were found !`,
+          msg: `No users with id: ${userId}, were found !`,
         });
       }
     } catch (error) {

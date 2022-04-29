@@ -1,5 +1,5 @@
+const { request, response } = require('express');
 const { Op } = require('sequelize');
-const { sequelize } = require('../models');
 const db = require('../models');
 
 const memberController = {
