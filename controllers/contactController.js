@@ -1,5 +1,5 @@
 const db = require('../models');
-const sendEmail = require('../utils/sendMail')
+const sendEmail = require('../utils/sendMail');
 
 const contactController = {
 	// Find all contacts
@@ -36,18 +36,16 @@ const contactController = {
 				message: req.body.message,
 			});
 
-          // Welcome email
-    const to = req.body.email;
-    const subject = 'welcome';
-    const message = 'welcome';
-                sendEmail(to,subject,message);
+			// Welcome email
+			const to = req.body.email;
+			const subject = 'welcome';
+			const message = 'welcome';
+			await sendEmail(to, subject, message);
 
 			return res.status(201).json({
 				success: true,
 				data: contacts,
 			});
-
-
 		} catch (err) {
 			return res.status(500).json({
 				success: false,
