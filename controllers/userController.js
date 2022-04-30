@@ -2,6 +2,8 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const db = require('../models');
 const { createToken } = require('../utils/jwt');
+const sendMail = require('../utils/sendMail');
+const template = require('../utils/emailTemplate');
 
 const userController = {
 
@@ -83,9 +85,10 @@ const userController = {
           lastName: req.body.lastName,
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 10),
-        }).then((user) => {
+        }).then(async (user) => {
+          sendMail(user.email, template.subject, template.html);
           const response = {
-            message: 'Account created successfully',
+            message: 'Check your email spam box !',
             data: {
               firstName: user.firstName,
               lastName: user.lastName,
@@ -98,7 +101,7 @@ const userController = {
     });
   },
   // End User CRUD
-  login: async(req, res) => {
+  login: async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
