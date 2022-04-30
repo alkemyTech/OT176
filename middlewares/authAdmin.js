@@ -1,39 +1,19 @@
-const jwt = require('jsonwebtoken');
-const {
-  findById,
-} = require('../utils/users');
-
+const { findById } = require('../controllers/userController');
 // roleId 1 = admin; roleId 2 = user
 
 const authAdmin = async (req, res, next) => {
-  const token = req.cookies.token || req.body.token || req.query.token || req.headers['x-access-token'];
-
   try {
-    if (token) {
-      console.log('token', token);
-      const verifyToken = jwt.verify(token, process.env.SECRET);
-      console.log('verifyToken', verifyToken);
-
-      const tokenId = verifyToken.user_id;
-      const user = await findById(tokenId);
-
-      if (!user) {
-        return res.status(404).json({
-          data: {
-            msg: 'User not found',
-          },
-        });
-      } if (user.roleId !== 1) {
-        return res.status(403).json({
-          data: {
-            msg: 'Access denied',
-          },
-        });
-      }
+    const user = await findById(req.user.id);
+    if (!user.id && user.roleId !== 1) {
+      throw new Error('Access denied');
     }
     return next();
   } catch (error) {
-    return res.status(401).send('Invalid User');
+    return res.status(403).json({
+      data: {
+        msg: 'Access denied',
+      },
+    });
   }
 };
 
