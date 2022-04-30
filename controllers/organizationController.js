@@ -48,8 +48,29 @@ module.exports = {
             })
 
     },
+    getDadta: async ( req, res ) => {
+        
+        try {
+            const data= await Organization.findAll();
+            const { name, image, phone, address }=data;
 
-
+            if(data){
+                res.status(200).json({
+                    name,
+                    image,
+                    phone,
+                    address
+                })
+            }
+            res.status(404).json({
+                msg:'The data you are trying to access is not available'
+            })
+        } catch (error) {
+            res.status(500).json({
+                msg: 'Please contact the administrator'
+            })
+        }
+    },
     //Update Organization
 
     update: (req, res) => {
