@@ -1,54 +1,51 @@
 const models = require('../models');
 
 const { Comments } = models;
+
 module.exports = {
   // Fetch all Comments
-  fetchAll: async (req, res) => {
-    await Comments.findAll({
-      order: ['createdAt', 'DESC'],
-    })
-
-      .then((comments) => {
-        res.status(200).json(comments.body);
-      })
-      .catch((error) => {
-        res.status(500).json(error);
+  fetchAll: async (req, res, next) => {
+    try {
+      const allComments = Comments.findAll({
+        attributes: ['body'],
+        order: [['createdAt', 'DESC']],
       });
+      res.status(200).json(allComments);
+    } catch (error) {
+      next(error);
+    }
   },
-
   // Fetch a Comments
 
-  fetchOne: async (req, res) => {
-    await Comments.findByPk(req.params.id)
-
-      .then((comment) => {
-        res.status(200).json(comment);
-      })
-      .catch((error) => {
-        res.status(500).json(error);
-      });
+  fetchOne: async (req, res, next) => {
+    try {
+      const findComment = await Comments.findByPk(req.params.id);
+      res.status(200).json(findComment);
+    } catch (error) {
+      next(error);
+    }
   },
 
   // Create Comment
 
-  createComment: async (req, res) => {
-    await Comments.create({
-      user_id: req.body.user_id,
-      body: req.body.body,
-      news_id: req.body.news_id,
-    })
-
-      .then((comment) => {
-        res.status(200).json(comment);
-      })
-      .catch((error) => {
-        res.status(500).json(error);
+  createComment: async (req, res, next) => {
+    try {
+      const newComment = await Comments.create({
+        user_id: req.body.user_id,
+        body: req.body.body,
+        news_id: req.body.news_id,
       });
+      res.status(200).json(newComment);
+    } catch (error) {
+      next(error);
+    }
   },
 
   // Update Comment
 
-  update: async (req, res) => {
+  update: async (req, res, next) => {
+
+    /*
     await Comments.findByPk(req.params.id)
 
       .then((commentToUpdate) => {
@@ -63,11 +60,13 @@ module.exports = {
       .catch((error) => {
         res.status(500).json(error);
       });
+      */
   },
 
   // Delete Comment
 
-  delete: async (req, res) => {
+  delete: async (req, res, next) => {
+    /*
     await Comments.destroy({
       where: {
         id: req.params.id,
@@ -79,5 +78,6 @@ module.exports = {
       .catch((error) => {
         res.status(500).json(error);
       });
+      */
   },
 };

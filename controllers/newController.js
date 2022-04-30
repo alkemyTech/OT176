@@ -30,6 +30,7 @@ const newController = {
         image: req.body.image,
         userId: req.body.userId,
         categoryId: req.body.categoryId,
+        type: req.body.type,
       });
       return res.status(201).json({
         success: true,
