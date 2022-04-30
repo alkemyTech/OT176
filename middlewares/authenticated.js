@@ -12,11 +12,9 @@ const authenticated = async (req, res, next) => {
         data: null,
       });
     }
-    const validToken = await verifyToken(token);
-    if (validToken) {
-      req.user = validToken;
-      next();
-    }
+    const decodeToken = await verifyToken(token);
+    req.user = decodeToken;
+    return next();
   } catch (error) {
     return res.status(401).json({
       message: error,

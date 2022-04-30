@@ -24,9 +24,7 @@ const createTestimonial = async (req, res, next) => {
   try {
     const { name, content, image } = req.body;
     const newTestimonial = await models.Testimonials.create({ name, content, image });
-    res
-      .status(201)
-      .json({ testimonial: newTestimonial });
+    res.status(201).json({ testimonial: newTestimonial });
   } catch (error) {
     next(error);
   }
