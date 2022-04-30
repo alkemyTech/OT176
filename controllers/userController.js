@@ -7,7 +7,7 @@ const template = require('../utils/emailTemplate');
 
 const userController = {
 
-  userList: (req, res, next) => {
+  userList: (req, res) => {
     db.User.findAll()
       .then((result) => {
         const response = {
@@ -21,7 +21,7 @@ const userController = {
         res.json(error);
       });
   },
-  userEdit: (req, res, next) => {
+  userEdit: (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -143,7 +143,7 @@ const userController = {
       });
     }
   },
-  getData: async (req = request, res = response) => {
+  getData: async (req, res) => {
     const { token } = req.headers;
 
     try {
@@ -155,7 +155,7 @@ const userController = {
         });
 
         const {
-          firstName, lastName, email, image, password, roleId,
+          firstName, lastName, email, image, roleId,
         } = user;
 
         if (user) {
@@ -180,7 +180,7 @@ const userController = {
       });
     }
   },
-  delete: async (req = request, res = response) => {
+  delete: async (req, res) => {
     const userId = Number(req.params.id);
 
     try {
