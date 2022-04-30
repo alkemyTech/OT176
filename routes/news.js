@@ -4,6 +4,7 @@ const router = express.Router();
 const validate = require('../middlewares/validate');
 const newValidator = require('../validations/news');
 const newController = require('../controllers/newController');
+
 const authAdmin = require('../middlewares/authAdmin');
 const authenticated = require('../middlewares/authenticated');
 
