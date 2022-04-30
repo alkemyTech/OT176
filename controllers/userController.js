@@ -120,10 +120,11 @@ const userController = {
 
           const token = await createToken(user.id);
 
-          res.cookie('token', token, {
-            expires: new Date(Date.now() + 900000),
-            httpOnly: true,
-          });
+          res.header('token', token);
+          // res.cookie('token', token, {
+          //   expires: new Date(Date.now() + 900000),
+          //   httpOnly: true,
+          // });
           res.status(200).json({
             user,
             token,
