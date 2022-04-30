@@ -1,11 +1,9 @@
 const express = require('express');
 
 const router = express.Router();
-const contactController = require('../controllers/contactController');
+const { categoryList } = require('../controllers/categoryController');
 const authAdmin = require('../middlewares/authAdmin');
 
-/* GET */
-router.get('/contacts', authAdmin, contactController.list);
-/* POST */
+router.get('/categories', authAdmin, categoryList);
 
 module.exports = router;
