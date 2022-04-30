@@ -88,7 +88,7 @@ const userController = {
         }).then(async (user) => {
           sendMail(user.email, template.subject, template.html);
           const response = {
-            message: 'Check your email spam box !',
+            message: 'Account created successfully! Check your email spam box!',
             data: {
               firstName: user.firstName,
               lastName: user.lastName,
@@ -108,17 +108,16 @@ const userController = {
         errors: errors.array(),
       });
     }
-
     try {
       const user = await db.User.findOne({
         where: {
           email: req.body.email,
         },
       });
-
       if (user) {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           console.log('User Authenticated');
+
           const token = await createToken(user.id);
 
           res.cookie('token', token, {
