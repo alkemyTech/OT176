@@ -108,18 +108,18 @@ const userController = {
         errors: errors.array(),
       });
     }
-    const user = await db.User.findOne({
-      where: {
-        email: req.body.email,
-      },
-    });
 
     try {
+      const user = await db.User.findOne({
+        where: {
+          email: req.body.email,
+        },
+      });
+
       if (user) {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           console.log('User Authenticated');
-
-          const token = createToken(user.id);
+          const token = await createToken(user.id);
 
           res.cookie('token', token, {
             expires: new Date(Date.now() + 900000),
