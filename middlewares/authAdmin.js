@@ -1,10 +1,19 @@
-const { findById } = require('../controllers/userController');
+const db = require('../models');
+const { verifyToken } = require('../utils/jwt');
 // roleId 1 = admin; roleId 2 = user
 
 const authAdmin = async (req, res, next) => {
   try {
-    const user = await findById(req.user.id);
-    if (!user.id && user.roleId !== 1) {
+    const auth = req.headers.authorization;
+    const token = auth?.replace('Bearer ', '');
+    const decodeToken = await verifyToken(token);
+
+    const user = await db.User.findOne({
+      where: {
+        id:decodeToken.id
+      },
+    });
+    if (user.roleId !== 1) {
       throw new Error('Access denied');
     }
     return next();
