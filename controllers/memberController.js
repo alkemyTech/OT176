@@ -1,4 +1,5 @@
 const { request, response } = require('express');
+const { Op } = require('sequelize');
 
 const { Member } = require('../models');
 
@@ -57,8 +58,10 @@ const memberController = {
 
   create: async (req = request, res = response) => {
     const {
-      name, facebookUrl, instagramUrl, linkedinUrl, image, description,
+      name, image, description,
     } = req.body;
+
+    const { facebookUrl = undefined, instagramUrl = undefined, linkedinUrl = undefined } = req.body;
 
     try {
       await Member.create({
@@ -69,9 +72,9 @@ const memberController = {
         msg: 'Member created successfully !',
       });
     } catch (error) {
-      res.status(500).json({
-        msg: 'Please contact the administrator',
-      });
+      return res.status(400).json(
+        error.errors.map((err) => `msg: ${err.message}`)[0],
+      );
     }
   },
 

@@ -6,7 +6,7 @@ const { Member } = require('../models');
 
 const memberValidation = {
   socialMediaInUse: async (req = request, res = response, next) => {
-    const { instagramUrl = false, facebookUrl = false, linkedinUrl = false } = req.body;
+    const { instagramUrl, facebookUrl, linkedinUrl } = req.body;
 
     try {
       const user = await Member.findOne({
@@ -21,19 +21,16 @@ const memberValidation = {
           },
         },
       });
-
       if (user) {
         const socialMedia = instagramUrl == user.instagramUrl ? instagramUrl : facebookUrl == user.facebookUrl ? facebookUrl : linkedinUrl;
         return res.status(400).json({
           msg: `A user is already using ${socialMedia} as social media`,
         });
       }
+      next();
     } catch (error) {
-      return res.status(400).json({
-        msg: 'There were a problem with the request',
-      });
+      next();
     }
-    next();
   },
   errorsCheck: (req, res, next) => {
     const errors = validationResult(req);
