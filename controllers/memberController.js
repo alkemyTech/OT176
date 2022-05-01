@@ -8,11 +8,12 @@ const memberController = {
   readAll: async (req = request, res = response) => {
     try {
       const data = await Member.findAll({
+        limit: 3,
         where: {
           is_deleted: false,
         },
       });
-
+      console.log(data);
       res.status(200).json({
         data,
       });

@@ -4,6 +4,7 @@ const db = require('../models');
 const { createToken } = require('../utils/jwt');
 const sendMail = require('../utils/sendMail');
 const template = require('../utils/emailTemplate');
+const { verifyToken } = require('../utils/jwt');
 
 const userController = {
 
@@ -144,13 +145,13 @@ const userController = {
     }
   },
   getData: async (req, res) => {
-    const { token } = req.headers;
+    const { id } = await verifyToken(req.headers.token);
 
     try {
-      if (token) {
+      if (id) {
         const user = await db.User.findOne({
           where: {
-            token,
+            id,
           },
         });
 
