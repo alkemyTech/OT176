@@ -22,7 +22,7 @@ const memberValidation = {
         },
       });
       if (user) {
-        //checks which social media is already taken
+        // checks which social media is already taken
         const socialMedia = instagramUrl == user.instagramUrl ? instagramUrl : facebookUrl == user.facebookUrl ? facebookUrl : linkedinUrl;
         return res.status(400).json({
           msg: `A user is already using ${socialMedia} as social media`,

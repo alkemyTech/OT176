@@ -5,7 +5,7 @@ const router = express.Router();
 const memberController = require('../controllers/memberController');
 const memberMiddleware = require('../validations/members');
 
-router.get('/getAllExample', memberController.readAll);
+router.get('/', memberController.readAll);
 
 router.get('/getOneExample', memberController.readOne);
 
