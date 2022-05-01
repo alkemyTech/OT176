@@ -46,10 +46,12 @@ const memberController = {
 
   Update: async (req = request, res = response) => {
     const { id } = req.params;
-    const { name, image, facebookUrl, instagramUrl, linkedinUrl, description, is_deleted } = req.body;
+    const {
+      name, image, facebookUrl, instagramUrl, linkedinUrl, description, is_deleted,
+    } = req.body;
 
     const member = await Member.findOne({
-      where:{
+      where: {
         id,
       },
     });

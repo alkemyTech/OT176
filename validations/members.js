@@ -39,7 +39,7 @@ const memberValidation = {
       const member = await Member.findOne({
         where: {
           id,
-          is_deleted:false,
+          is_deleted: false,
         },
       });
 
