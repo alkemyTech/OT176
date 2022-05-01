@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.TEXT,
     image: DataTypes.STRING,
     categoryId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
+    user_id: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'New',
