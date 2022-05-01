@@ -46,35 +46,26 @@ const memberController = {
 
   Update: async (req = request, res = response) => {
     const { id } = req.params;
+    const { name, image, facebookUrl, instagramUrl, linkedinUrl, description, is_deleted } = req.body;
 
-    try {
-      const data = await Member.findOne({
-        where: {
-          id,
-          [Op.and]: [
-            { is_deleted: false },
-          ],
-        },
-      });
+    const member = await Member.findOne({
+      where:{
+        id,
+      },
+    });
 
-      if (data[0]) {
-        await data[0].update({
-          name, facebookUrl, instagramUrl, linkedinUrl, image, description, is_deleted,
-        });
+    member.update({
+      name,
+      image,
+      facebookUrl,
+      instagramUrl,
+      linkedinUrl,
+      description,
+    });
 
-        res.status(200).json({
-          msg: 'Member updated !!',
-        });
-      } else {
-        res.status(404).json({
-          msg: 'No members with the provided data exist in DB',
-        });
-      }
-    } catch (error) {
-      res.status(500).json({
-        msg: 'Please contact the administrator',
-      });
-    }
+    res.status(200).json({
+      msg: `User with id: ${id} were updated successfully`,
+    });
   },
 
   softDelete: async (req = request, res = response) => {
