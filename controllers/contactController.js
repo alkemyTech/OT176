@@ -1,8 +1,9 @@
 const db = require('../models');
-const sendEmail = require('../utils/sendMail')
+const sendEmail = require('../utils/sendMail');
 
 const contactController = {
 // Find all contacts
+
   list: async (req, res, next) => {
     try {
       const contacts = await db.Contact.findAll({});
@@ -26,7 +27,6 @@ const contactController = {
       if (!(req.body.email && req.body.name)) {
         res.status(400).send('Name and email are required');
       }
-
       //Get contact information
 
       const contacts = await db.Contact.create({

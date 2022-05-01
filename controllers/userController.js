@@ -1,10 +1,13 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const db = require('../models');
+const { createToken } = require('../utils/jwt');
+const sendMail = require('../utils/sendMail');
+const template = require('../utils/emailTemplate');
 
 const userController = {
 
-  userList: (req, res, next) => {
+  userList: (req, res) => {
     db.User.findAll()
       .then((result) => {
         const response = {
@@ -18,7 +21,7 @@ const userController = {
         res.json(error);
       });
   },
-  userEdit: (req, res, next) => {
+  userEdit: (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -82,9 +85,10 @@ const userController = {
           lastName: req.body.lastName,
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 10),
-        }).then((user) => {
+        }).then(async (user) => {
+          sendMail(user.email, template.subject, template.html);
           const response = {
-            message: 'Account created successfully',
+            message: 'Account created successfully! Check your email spam box!',
             data: {
               firstName: user.firstName,
               lastName: user.lastName,
@@ -96,57 +100,50 @@ const userController = {
       }
     });
   },
-  userDelete: (req, res, next) => {
-
-  },
   // End User CRUD
-  login: (req, res) => {
+  login: async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array(),
       });
     }
-    db.User.findOne({
-      where: {
-        email: req.body.email,
-      },
-    }).then((user) => {
-      if (user != undefined) {
+    try {
+      const user = await db.User.findOne({
+        where: {
+          email: req.body.email,
+        },
+      });
+      if (user) {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           console.log('User Authenticated');
 
-          const token = jwt.sign(
-            {
-              user_id: user.id,
-            },
-            process.env.SECRET,
-          );
+          const token = await createToken(user.id);
 
-          res.cookie('token', token, {
-            expires: new Date(Date.now() + 900000),
-            httpOnly: true,
-          });
-
-          const response = {
+          res.header('token', token);
+          // res.cookie('token', token, {
+          //   expires: new Date(Date.now() + 900000),
+          //   httpOnly: true,
+          // });
+          res.status(200).json({
             user,
             token,
-          };
-          res.json(response);
+          });
         } else {
-          res.json('The password is incorrect');
+          res.status(401).json({
+            msg: 'The password is incorrect',
+          });
         }
       } else {
         res.json('User not found');
       }
-    }).catch(() => {
-      const error = {
-        ok: false,
-      };
-      res.json(error);
-    });
+    } catch (error) {
+      res.status(500).json({
+        msg: 'Please contact the administrator',
+      });
+    }
   },
-  getData: async (req = request, res = response) => {
+  getData: async (req, res) => {
     const { token } = req.headers;
 
     try {
@@ -158,7 +155,7 @@ const userController = {
         });
 
         const {
-          firstName, lastName, email, image, password, roleId,
+          firstName, lastName, email, image, roleId,
         } = user;
 
         if (user) {
@@ -183,13 +180,13 @@ const userController = {
       });
     }
   },
-  delete: async (req = request, res = response) => {
-    const user_id = Number(req.params.id);
+  delete: async (req, res) => {
+    const userId = Number(req.params.id);
 
     try {
       const user = await db.User.findOne({
         where: {
-          id: user_id,
+          id: userId,
           is_deleted: false,
         },
       });
@@ -202,7 +199,7 @@ const userController = {
         });
       } else {
         res.status(404).json({
-          msg: `No users with id: ${user_id}, were found !`,
+          msg: `No users with id: ${userId}, were found !`,
         });
       }
     } catch (error) {
