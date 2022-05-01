@@ -39,7 +39,7 @@ const memberValidation = {
       const member = await Member.findOne({
         where: {
           id,
-          is_deleted:false,
+          is_deleted: false,
         },
       });
 
@@ -62,15 +62,4 @@ const memberValidation = {
   },
 };
 
-const memberMiddleware = {
-  create: [
-    memberValidation.socialMediaInUse,
-    memberValidation.errorsCheck,
-  ],
-  update: [
-    memberValidation.memberExists,
-    memberValidation.errorsCheck,
-  ],
-};
-
-module.exports = memberMiddleware;
+module.exports = memberValidation;

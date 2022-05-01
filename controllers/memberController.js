@@ -46,10 +46,12 @@ const memberController = {
 
   Update: async (req = request, res = response) => {
     const { id } = req.params;
-    const { name, image, facebookUrl, instagramUrl, linkedinUrl, description, is_deleted } = req.body;
+    const {
+      name, image, facebookUrl, instagramUrl, linkedinUrl, description, is_deleted,
+    } = req.body;
 
     const member = await Member.findOne({
-      where:{
+      where: {
         id,
       },
     });
@@ -69,33 +71,20 @@ const memberController = {
   },
 
   softDelete: async (req = request, res = response) => {
-    const { instagramUrl = false, facebookUrl = false, linkedinUrl = false } = req.query;
+    const { id } = req.params;
 
     try {
-      const data = await Member.findAll({
+      const member = await Member.findOne({
         where: {
-          [Op.or]: [
-            { instagramUrl },
-            { facebookUrl },
-            { linkedinUrl },
-          ],
-          [Op.and]: [
-            { is_deleted: false },
-          ],
+          id,
         },
       });
 
-      if (data[0]) {
-        await data[0].update({ is_deleted: true });
+      await member.update({ is_deleted: true });
 
-        res.status(200).json({
-          msg: 'Member has been soft-delete !!',
-        });
-      } else {
-        res.status(404).json({
-          msg: 'No members with the provided data exist in DB',
-        });
-      }
+      res.status(200).json({
+        msg: 'Member has been soft-delete !!',
+      });
     } catch (error) {
       res.status(500).json({
         msg: 'Please contact the administrator',
