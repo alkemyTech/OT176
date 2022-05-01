@@ -33,6 +33,26 @@ const memberValidation = {
       next();
     }
   },
+  memberExists: async (req = request, res = response, next) => {
+    try {
+      const { id } = req.params;
+      const member = await Member.findOne({
+        where: {
+          id,
+          is_deleted:false,
+        },
+      });
+
+      if (!member) {
+        return res.status(404).json({
+          msg: `No members with id:${id} were found`,
+        });
+      }
+      next();
+    } catch (error) {
+      next();
+    }
+  },
   errorsCheck: (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -45,6 +65,10 @@ const memberValidation = {
 const memberMiddleware = {
   create: [
     memberValidation.socialMediaInUse,
+    memberValidation.errorsCheck,
+  ],
+  update: [
+    memberValidation.memberExists,
     memberValidation.errorsCheck,
   ],
 };
