@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator');
 const { Op } = require('sequelize');
 
 const { Member } = require('../models');
+const { verifyToken } = require('../utils/jwt');
 
 const memberValidation = {
   socialMediaInUse: async (req = request, res = response, next) => {
@@ -52,6 +53,16 @@ const memberValidation = {
     } catch (error) {
       next();
     }
+  },
+  isAdminRole: async (req = request, res = response, next) => {
+    const { id } = await verifyToken(req.headers.token);
+
+    if (id !== 1) {
+      return res.status(400).json({
+        msg: 'User does not have the privilegies to do this',
+      });
+    }
+    next();
   },
   errorsCheck: (req, res, next) => {
     const errors = validationResult(req);
