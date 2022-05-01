@@ -1,43 +1,29 @@
-const jwt = require('../utils/jwt');
-
-const { findById } = require('../controllers/userController');
+const db = require('../models');
+const { verifyToken } = require('../utils/jwt');
 
 // roleId 1 = admin; roleId 2 = user
 
 const authAdmin = async (req, res, next) => {
-  const token = req.cookies.token || req.body.token || req.query.token || req.headers['x-access-token'];
-
   try {
-    if (token) {
-      const verifyToken = await jwt.verifyToken(token, process.env.SECRET);
-      console.log('verifyToken', verifyToken);
+    const auth = req.headers.authorization;
+    const token = auth?.replace('Bearer ', '');
+    const decodeToken = await verifyToken(token);
 
-      const tokenId = verifyToken.id;
-      const user = await findById(tokenId);
-
-      if (!user) {
-        return res.status(404).json({
-          data: {
-            msg: 'User not found',
-          },
-        });
-      } if (user.roleId !== 1) {
-        return res.status(403).json({
-          data: {
-            msg: 'Access denied',
-          },
-        });
-      }
-    } else {
-      return res.status(403).json({
-        data: {
-          msg: 'Token Not Found',
-        },
-      });
+    const user = await db.User.findOne({
+      where: {
+        id:decodeToken.id
+      },
+    });
+    if (user.roleId !== 1) {
+      throw new Error('Access denied');
     }
     next();
   } catch (error) {
-    return res.status(401).send('Invalid User');
+    return res.status(403).json({
+      data: {
+        msg: 'Access denied',
+      },
+    });
   }
 };
 
