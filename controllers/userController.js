@@ -208,6 +208,14 @@ const userController = {
       });
     }
   },
+  findById: async (id) => {
+    try {
+      const user = await db.User.findByPk(id);
+      return user;
+    } catch (error) {
+      console.log('error', error);
+    }
+  },
 };
 
 module.exports = userController;

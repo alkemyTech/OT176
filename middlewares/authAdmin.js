@@ -1,5 +1,6 @@
 const db = require('../models');
 const { verifyToken } = require('../utils/jwt');
+
 // roleId 1 = admin; roleId 2 = user
 
 const authAdmin = async (req, res, next) => {
@@ -16,7 +17,7 @@ const authAdmin = async (req, res, next) => {
     if (user.roleId !== 1) {
       throw new Error('Access denied');
     }
-    return next();
+    next();
   } catch (error) {
     return res.status(403).json({
       data: {

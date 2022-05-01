@@ -20,7 +20,7 @@ router.get('/auth/me', userValidation.authorizations.token, userController.getDa
 router.post('/users/:id', userEdit);
 router.post('/auth/signup', userValidation.signup, signup);
 router.post('/auth/login', userValidation.login, login);
-router.post('/auth/upload', upload, authAdmin, awsImageUploader);
+router.post('/auth/awsImgUpload', authAdmin, upload, awsImageUploader);
 router.delete('/:id', userController.delete);
 
 module.exports = router;
