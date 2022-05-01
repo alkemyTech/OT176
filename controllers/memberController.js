@@ -38,9 +38,9 @@ const memberController = {
         msg: 'Member created successfully !',
       });
     } catch (error) {
-      res.status(500).json({
-        msg: 'Please contact the administrator',
-      });
+      return res.status(400).json(
+        error.errors.map((err) => `msg: ${err.message}`)[0],
+      );
     }
   },
 
