@@ -4,7 +4,7 @@ const getTestimonials = async (req, res, next) => {
   try {
     const testimonials = await models.Testimonials.findAll();
     // codigo
-    res.json({ testimonials: testimonials });
+    res.json({ testimonials });
   } catch (error) {
     next(error);
   }
@@ -12,7 +12,7 @@ const getTestimonials = async (req, res, next) => {
 
 const getOneTestimonial = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
     // codigo
     res.json({ testimonial: `base datos para ${id} testimonial` });
   } catch (error) {
@@ -22,11 +22,9 @@ const getOneTestimonial = async (req, res, next) => {
 
 const createTestimonial = async (req, res, next) => {
   try {
-    const {name, content, image} = req.body
-    const newTestimonial = await models.Testimonials.create({name, content, image})
-    res
-      .status(201)
-      .json({ testimonial: newTestimonial })
+    const { name, content, image } = req.body;
+    const newTestimonial = await models.Testimonials.create({ name, content, image });
+    res.status(201).json({ testimonial: newTestimonial });
   } catch (error) {
     next(error);
   }
@@ -35,13 +33,13 @@ const createTestimonial = async (req, res, next) => {
 const updateTestimonial = async (req, res, next) => {
   try {
     const data = req.body;
-    const id = req.params.id;
+    const { id } = req.params;
     if (!id) throw new Error('Invalid Id');
     const testimonial = await models.Testimonials.findByPk(id);
     if (!testimonial) throw new Error('Item not found');
     Object.assign(testimonial, data);
     await testimonial.save();
-    
+
     res.json({ testimonial });
   } catch (error) {
     next(error);
@@ -50,7 +48,7 @@ const updateTestimonial = async (req, res, next) => {
 
 const deleteTestimonial = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
     if (!id) throw new Error('Invalid Id');
     const testimonial = await models.Testimonials.findByPk(id);
     if (!testimonial) throw new Error('Item not found');

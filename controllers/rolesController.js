@@ -1,27 +1,28 @@
-const models = require("../models");
-const Roles = models.Roles;
+const models = require('../models');
+
+const { Roles } = models;
 module.exports = {
-  //Fetch all Role
+  // Fetch all Role
   fetchAll: async (req, res) => {
     await Roles.findAll()
 
-      .then(function (roles) {
+      .then((roles) => {
         res.status(200).json(roles);
       })
-      .catch(function (error) {
+      .catch((error) => {
         res.status(500).json(error);
       });
   },
 
-  //Fetch a Roles
+  // Fetch a Roles
 
   fetchOne: async (req, res) => {
     await Roles.findByPk(req.params.id)
 
-      .then(function (role) {
+      .then((role) => {
         res.status(200).json(role);
       })
-      .catch(function (error) {
+      .catch((error) => {
         res.status(500).json(error);
       });
   },
@@ -34,33 +35,33 @@ module.exports = {
       description: req.body.description,
     })
 
-      .then(function (role) {
+      .then((role) => {
         res.status(200).json(role);
       })
-      .catch(function (error) {
+      .catch((error) => {
         res.status(500).json(error);
       });
   },
 
-  //Update Role
+  // Update Role
 
   update: async (req, res) => {
     await Roles.findByPk(req.params.id)
 
-      .then(function (roleToUpdate) {
+      .then((roleToUpdate) => {
         roleToUpdate.name = req.body.name;
         roleToUpdate.description = req.body.description;
         roleToUpdate.save();
       })
-      .then(function (updatedRole) {
+      .then((updatedRole) => {
         res.status(200).json(updatedRole);
       })
-      .catch(function (error) {
+      .catch((error) => {
         res.status(500).json(error);
       });
   },
 
-  //Delete Role
+  // Delete Role
 
   delete: async (req, res) => {
     await Roles.destroy({
@@ -68,10 +69,10 @@ module.exports = {
         id: req.params.id,
       },
     })
-      .then(function (deletedRole) {
+      .then((deletedRole) => {
         res.status(200).json(deletedRole);
       })
-      .catch(function (error) {
+      .catch((error) => {
         res.status(500).json(error);
       });
   },

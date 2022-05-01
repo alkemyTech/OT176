@@ -1,37 +1,36 @@
-const sgMail = require('@sendgrid/mail')
-const config = require('../config/config')
+const sgMail = require('@sendgrid/mail');
+const config = require('../config/config');
 
 /**
- * sendMail function to send email
+ * sendMail function to send email by SendGrid
  * @param {string} toEmail (string)
  * @param {string} subject (string)
- * @param {string} message (string html)
- * @param {function} next (function)
- * @returns (obj) -> api response
+ * @param {string} html (string html)
+ * @returns (array) -> Response { statusCode: 202, body, headers }
  */
-const sendMail = async (toEmail, subject, message, next = false) => {
+const sendMail = async (toEmail, subject, html) => {
   try {
-    if (config.sendgrid_key) {
-      sgMail.setApiKey(config.sendgrid_key)
-
-      const msg = {
-        to: toEmail,
-        from: config.sendgrid_verified,
-        subject: subject,
-        html: message
-      }
-
-      const sending = await sgMail.send(msg)
-      if (sending) {
-        return sending
-      }
+    if (!config.sendgridKey && !config.sendgridVerified) {
+      throw new Error('No se pudo procesar el envio, requiere Keys Válidos');
     }
+    sgMail.setApiKey(config.sendgridKey);
+    const msg = {
+      to: toEmail, from: config.sendgridVerified, subject, html,
+    };
+    return await sgMail.send(msg);
   } catch (error) {
-    console.log(error.message)
-    if (next) {
-      next(error)
+    if (error.response) {
+      const { message, code, response } = error;
+      const errorSendGrid = {
+        message: `No se pudo procesar el envio de correo: ${message}`,
+        error: message,
+        status: code,
+        errors: response.body.errors,
+      };
+      throw errorSendGrid;
     }
+    throw error;
   }
-}
+};
 
-module.exports = sendMail
+module.exports = sendMail;
