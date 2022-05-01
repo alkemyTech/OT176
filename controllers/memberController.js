@@ -1,12 +1,12 @@
 const { request, response } = require('express');
-const { Op } = require('sequelize');
-const db = require('../models');
+
+const { Member } = require('../models');
 
 const memberController = {
 
   readAll: async (req = request, res = response) => {
     try {
-      const data = await db.Member.findAll({
+      const data = await Member.findAll({
         where: {
           is_deleted: false,
         },
@@ -22,11 +22,11 @@ const memberController = {
     }
   },
 
-  readOne: async (req, res) => {
+  readOne: async (req = request, res = response) => {
     const { instagramUrl, facebookUrl, linkedinUrl } = req.query;
 
     try {
-      const data = await db.Member.findAll({
+      const data = await Member.findAll({
         where: {
           [Op.or]: [
             { instagramUrl },
@@ -55,39 +55,33 @@ const memberController = {
     }
   },
 
-  create: async (req, res) => {
+  create: async (req = request, res = response) => {
     const {
-      name, facebookUrl, instagramUrl, linkedinUrl, image, description, is_deleted = false,
+      name, facebookUrl, instagramUrl, linkedinUrl, image, description,
     } = req.body;
 
     try {
-      await db.Member.create({
-        name, facebookUrl, instagramUrl, linkedinUrl, image, description, is_deleted,
+      await Member.create({
+        name, facebookUrl, instagramUrl, linkedinUrl, image, description,
       });
 
       res.status(200).json({
-        msg: 'A new member has been created !!',
+        msg: 'Member created successfully !',
       });
     } catch (error) {
-      return res.status(400).json(
-        error.errors.map((err) => `msg: ${err.message}`)[0],
-      );
+      res.status(500).json({
+        msg: 'Please contact the administrator',
+      });
     }
   },
 
   Update: async (req = request, res = response) => {
-    const {
-      name, facebookUrl, instagramUrl, linkedinUrl, image, description, is_deleted,
-    } = req.query;
+    const { id } = req.params;
 
     try {
-      const data = await db.Member.findAll({
+      const data = await Member.findOne({
         where: {
-          [Op.or]: [
-            { instagramUrl },
-            { facebookUrl },
-            { linkedinUrl },
-          ],
+          id,
           [Op.and]: [
             { is_deleted: false },
           ],
@@ -118,7 +112,7 @@ const memberController = {
     const { instagramUrl = false, facebookUrl = false, linkedinUrl = false } = req.query;
 
     try {
-      const data = await db.Member.findAll({
+      const data = await Member.findAll({
         where: {
           [Op.or]: [
             { instagramUrl },
