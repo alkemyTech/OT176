@@ -22,40 +22,6 @@ const memberController = {
       });
     }
   },
-
-  readOne: async (req = request, res = response) => {
-    const { instagramUrl, facebookUrl, linkedinUrl } = req.query;
-
-    try {
-      const data = await Member.findAll({
-        where: {
-          [Op.or]: [
-            { instagramUrl },
-            { facebookUrl },
-            { linkedinUrl },
-          ],
-          [Op.and]: [
-            { is_deleted: false },
-          ],
-        },
-      });
-
-      if (data.length > 0) {
-        res.status(200).json(
-          data,
-        );
-      } else {
-        res.status(404).json({
-          msg: 'Member not found in DB',
-        });
-      }
-    } catch (error) {
-      res.status(500).json({
-        msg: 'Please contact the administrator',
-      });
-    }
-  },
-
   create: async (req = request, res = response) => {
     const {
       name, image, description,

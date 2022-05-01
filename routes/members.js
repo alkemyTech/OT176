@@ -7,8 +7,6 @@ const memberMiddleware = require('../validations/members');
 
 router.get('/', memberController.readAll);
 
-router.get('/getOneExample', memberController.readOne);
-
 router.post('/', memberMiddleware.create, memberController.create);
 
 router.put('/:id', memberController.Update);
