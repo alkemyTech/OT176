@@ -18,12 +18,6 @@ module.exports = {
       bail: true,
     },
   },
-  userId: {
-    notEmpty: {
-      errorMessage: 'User is required',
-      bail: true,
-    },
-  },
   categoryId: {
     notEmpty: {
       errorMessage: 'CategoryId is required',

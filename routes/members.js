@@ -11,6 +11,6 @@ router.post('/', memberMiddleware.create, memberController.create);
 
 router.put('/:id', memberMiddleware.update, memberController.Update);
 
-router.delete('/softDeleteExample', memberController.softDelete);
+router.delete('/:id', memberController.softDelete);
 
 module.exports = router;
