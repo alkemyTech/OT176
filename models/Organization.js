@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     deletedAt: DataTypes.DATE,
     facebook: DataTypes.STRING,
     instagram:DataTypes.STRING,
-    linkedin: DataTypes.STRING
+    linkedin: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Organization',
