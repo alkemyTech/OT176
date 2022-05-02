@@ -1,7 +1,7 @@
 const { Organization } = require('../models');
 
 module.exports = {
-  // Fetch all Organization
+
   fetchAll: async (req, res) => {
     await Organization.findAll()
 
@@ -13,7 +13,7 @@ module.exports = {
       });
   },
 
-  // Fetch a Organization
+
 
   fetchOne: async (req, res) => {
     await Organization.findByPk(req.params.id)
