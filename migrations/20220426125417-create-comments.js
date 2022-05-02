@@ -1,18 +1,31 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Roles', {
+    await queryInterface.createTable('Comments', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
+      user_id: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
       },
-      description: {
-        type: Sequelize.STRING,
+      body: {
+        allowNull: false,
+        type: Sequelize.TEXT,
+      },
+      news_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'News',
+          key: 'id',
+        },
       },
       deletedAt: {
         type: Sequelize.DATE,
@@ -28,6 +41,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Roles');
+    await queryInterface.dropTable('Comments');
   },
 };

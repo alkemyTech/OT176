@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Roles', {
+    await queryInterface.createTable('Contacts', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -8,26 +8,23 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       name: {
-        allowNull: false,
         type: Sequelize.STRING,
       },
-      description: {
+      phone: {
+        type: Sequelize.INTEGER,
+      },
+      email: {
+        type: Sequelize.STRING,
+      },
+      message: {
         type: Sequelize.STRING,
       },
       deletedAt: {
         type: Sequelize.DATE,
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Roles');
+    await queryInterface.dropTable('Contacts');
   },
 };
