@@ -39,8 +39,9 @@ app.use('/members', membersRouter);
 app.use('/comments', commentsController);
 app.use('/contacts', contactsRouter);
 app.use('/backoffice', backofficeRouter);
-app.use('/organization', organizationRouter);
 app.use('/api', documentationRouter);
+app.use('/organization', organizationRouter);
+
 
 
 // catch 404 and forward to error handler
