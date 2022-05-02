@@ -7,7 +7,7 @@ const authOwnership = require('../middlewares/authOwnership');
 const { fetchAll, createComment } = require('../controllers/commentsControllers');
 const commentValidator = require('../validations/comments');
 /* POST comments. */
-router.post('/', validate(commentValidator), createComment);
-router.get('/', authAdmin, fetchAll);
+router.post('/', validate(commentValidator), createComment)
+router.get('/', authAdmin, fetchAll)
 
 module.exports = router;
