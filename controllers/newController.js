@@ -28,8 +28,9 @@ const newController = {
         name: req.body.name,
         content: req.body.content,
         image: req.body.image,
-        userId: req.body.userId,
+        userId: req.user_id,
         categoryId: req.body.categoryId,
+        type: req.body.type,
       });
       return res.status(201).json({
         success: true,
