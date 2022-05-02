@@ -30,26 +30,58 @@ module.exports = {
 
     // Create Organization
 
-    create: (req, res) => {
+     create: async (req, res) => {
+    await Organization.create({
+      name: req.body.name,
+      image: req.body.image,
+      address: req.body.address,
+      phone: req.body.phone,
+      email: req.body.email,
+      welcomeText: req.body.welcomeText,
+      aboutUsText: req.body.aboutUsText,
+      facebook: req.body.facebook,
+      instagram: req.body.instagram,
+      linkedin: req.body.linkedin,
+    })
+      .then((Organization) => {
+        res.status(200).json(Organization);
+      })
+      .catch((error) => {
+        res.status(500).json(error);
+      });
+  },
+  
+    getData: async (req, res) => {
+    const { name } = req.query;
 
-        await Organization.create({
-            name: req.body.name,
-            image: req.body.image,
-            address: req.body.address,
-            phone: req.body.phone,
-            email: req.body.email,
-            welcomeText: req.body.welcomeText,
-            aboutUsText: req.body.aboutUsText
-        })
-            .then(function (Organization) {
-                res.status(200).json(Organization);
-            })
-            .catch(function (error) {
-                res.status(500).json(error);
-            })
+    if (!name) {
+      return res.status(400).json({
+        msg: 'Org name should be provided',
+      });
+    }
+    try {
+      const data = await Organization.findOne({
+        where: {
+          name,
+        },
+      });
 
-    },
+      const { image, phone, address,  } = data;
 
+      if (data) {
+        res.status(200).json({
+          name,
+          image,
+          phone,
+          address,
+        });
+      }
+    } catch (error) {
+      res.status(404).json({
+        msg: 'The data you are trying to access is not available',
+      });
+    }
+  },
 
     //Update Organization
 
@@ -82,19 +114,19 @@ module.exports = {
         }
     },
 
-    //Delete Organization
+  // Delete Organization
 
-    delete: (req, res) => {
-        await Organization.destroy({
-            where: {
-                id: req.params.id
-            }
-        })
-            .then(function (deletedOrganization) {
-                res.status(200).json(deletedOrganization);
-            })
-            .catch(function (error) {
-                res.status(500).json(error);
-            })
-    }
+  delete: async (req, res) => {
+    await Organization.destroy({
+      where: {
+        id: req.params.id,
+      },
+    })
+      .then((deletedOrganization) => {
+        res.status(200).json(deletedOrganization);
+      })
+      .catch((error) => {
+        res.status(500).json(error);
+      });
+  },
 };

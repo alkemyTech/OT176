@@ -4,7 +4,7 @@ const router = express.Router();
 const validate = require('../middlewares/validate');
 const newValidator = require('../validations/news');
 const {
-  list, store, detail, update,
+  list, store, detail, update, delete,
 } = require('../controllers/newController');
 const authAdmin = require('../middlewares/authAdmin');
 const authenticated = require('../middlewares/authenticated');
@@ -18,5 +18,8 @@ router.post('/', authenticated, authAdmin, validate(newValidator), store);
 
 /* PUT NEWS */
 router.put('/:id', authenticated, authAdmin, update);
+
+/* DELETE NEWS */
+router.delete('/:id', authenticated, authAdmin, delete);
 
 module.exports = router;

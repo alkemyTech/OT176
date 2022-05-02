@@ -40,10 +40,34 @@ const userValidator = {
 
     body('password').notEmpty().withMessage('You must complete the password field').bail(),
   ],
+  edit:[
+    body('firstName')
+      .isAlpha()
+      .withMessage('The first name must contain only letters, not numbers')
+      .bail()
+      .isLength({
+        min: 2,
+      })
+      .withMessage('The first name must have more than 2 characters'),
+
+    body('lastName')
+      .isAlpha()
+      .withMessage('The last name must contain only letters, not numbers')
+      .bail()
+      .isLength({
+        min: 2,
+      })
+      .withMessage('The last name must have more than 2 characters'),
+
+    body('email')
+      .isEmail()
+      .withMessage('The email must be valid'),
+
+  ],
 
   authorizations: {
     token: (req = request, res = response, next) => {
-      const { token } = req.headers;
+      const token = req.headers || req.cookies;
 
       if (!token) {
         return res.status(403).json({ error: 'No credentials sent!' });
