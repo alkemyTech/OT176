@@ -3,10 +3,11 @@ const express = require('express');
 const router = express.Router();
 const contactController = require('../controllers/contactController');
 const authAdmin = require('../middlewares/authAdmin');
+const authOwnership = require('../middlewares/authAdmin');
 
 /* GET */
-router.get('/', contactController.list);
+router.get('/', authAdmin, contactController.list);
 /* POST */
-router.post('/', authAdmin, contactController.store);
+router.post('/', authOwnership, contactController.store);
 
 module.exports = router;
