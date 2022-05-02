@@ -63,7 +63,7 @@ module.exports = {
         },
       });
 
-      const { image, phone, address,  } = data;
+      const { image, phone, address, facebook, instagram, linkedin  } = data;
 
       if (data) {
         res.status(200).json({
@@ -71,6 +71,9 @@ module.exports = {
           image,
           phone,
           address,
+          facebook,
+          instagram,
+          linkedin
         });
       }
     } catch (error) {
