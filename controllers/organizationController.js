@@ -1,3 +1,4 @@
+const db = require("../models");
 const models = require("../models");
 const Organization = models.Organization
 module.exports = {
@@ -52,26 +53,33 @@ module.exports = {
 
     //Update Organization
 
-    update: (req, res) => {
-        await Organization.findByPk(req.params.id)
-
-            .then(function (OrganizationToUpdate) {
-                OrganizationToUpdate.name = req.body.name;
-                OrganizationToUpdate.image = req.body.image;
-                OrganizationToUpdate.address = req.body.address;
-                OrganizationToUpdate.phone = req.body.phone;
-                OrganizationToUpdate.email = req.body.email;
-                OrganizationToUpdate.welcomeText = req.body.welcomeText;
-                OrganizationToUpdate.aboutUsText = req.body.aboutUsText;
-                OrganizationToUpdate.save();
+    organizationUpdate: (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({
+            errors: errors.array(),
+          });
+        } else {
+            const { name, image, address, phone, email, welcomeText, aboutUsText} = req.body;
+            db.Organization.update({
+                name,
+                image,
+                address,
+                phone,
+                email,
+                welcomeText,
+                aboutUsText,
             })
-            .then(function (updatedOrganization) {
-                res.status(200).json(updatedOrganization);
+            .then((result) => {
+                const resolve = {
+                    status: 200,
+                    message: 'Public data organization updated successfully!',
+                    data: result,
+                };
+                res.json(resolve);
             })
-            .catch(function (error) {
-                res.status(500).json(error);
-            });
-
+            .catch(error => res.json(error));
+        }
     },
 
     //Delete Organization
