@@ -6,14 +6,15 @@ const { Member } = require('../models');
 const memberController = {
 
   readAll: async (req = request, res = response) => {
+    const { limit = 10, page }= req.query;
     try {
-      const data = await Member.findAll({
-        limit: 3,
+      const data = await Member.findAndCountAll({
+        limit,
+        offset: limit * page,
         where: {
           is_deleted: false,
         },
       });
-      console.log(data);
       res.status(200).json({
         data,
       });
