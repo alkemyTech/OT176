@@ -56,8 +56,14 @@ const memberValidation = {
   },
   isAdminRole: async (req = request, res = response, next) => {
     const { id } = await verifyToken(req.headers.token);
+    let role = Member.findOne({
+      where: {
+        id,
+      },
+    });
+    role = role.role;
 
-    if (id !== 1) {
+    if (role !== 1) {
       return res.status(400).json({
         msg: 'User does not have the privilegies to do this',
       });

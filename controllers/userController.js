@@ -1,10 +1,9 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const db = require('../models');
-const { createToken } = require('../utils/jwt');
+const { createToken, verifyToken } = require('../utils/jwt');
 const sendMail = require('../utils/sendMail');
 const template = require('../utils/emailTemplate');
-const { verifyToken } = require('../utils/jwt');
 
 const userController = {
 
@@ -47,13 +46,15 @@ const userController = {
           },
         },
       )
-        .then((result) => {
-          const response = {
-            status: 200,
-            message: 'User updated successfully!',
-            data: result,
-          };
-          res.json(response);
+        .then(() => {
+          db.User.findByPk(req.params.id).then((user) => {
+            const response = {
+              status: 200,
+              message: 'User updated successfully!',
+              data: user,
+            };
+            res.json(response);
+          });
         })
         .catch((error) => {
           res.json(error);
@@ -193,6 +194,7 @@ const userController = {
       });
 
       if (user) {
+        console.log('userToDel', user);
         await user.update({ is_deleted: true });
 
         res.json({
@@ -207,6 +209,14 @@ const userController = {
       return res.status(500).json({
         msg: 'Pelase contact the administrator',
       });
+    }
+  },
+  findById: async (id) => {
+    try {
+      const user = await db.User.findByPk(id);
+      return user;
+    } catch (error) {
+      console.log('error', error);
     }
   },
 };

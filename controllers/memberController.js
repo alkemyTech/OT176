@@ -6,7 +6,7 @@ const { Member } = require('../models');
 const memberController = {
 
   readAll: async (req = request, res = response) => {
-    const { limit = 10, page }= req.query;
+    const { limit = 10, page } = req.query;
     try {
       const data = await Member.findAndCountAll({
         limit,
