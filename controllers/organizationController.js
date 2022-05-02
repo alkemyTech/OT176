@@ -44,7 +44,7 @@ module.exports = {
         res.status(500).json(error);
       });
   },
-  getDadta: async (req, res) => {
+  getData: async (req, res) => {
     const { name } = req.query;
 
     if (!name) {
@@ -60,7 +60,7 @@ module.exports = {
         },
       });
 
-      const { image, phone, address } = data;
+      const { image, phone, address,  } = data;
 
       if (data) {
         res.status(200).json({
