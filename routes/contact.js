@@ -10,4 +10,5 @@ router.get('/', authAdmin, contactController.list);
 /* POST */
 router.post('/', authOwnership, contactController.store);
 
-module.exports = router;
+module.exports = router
+
