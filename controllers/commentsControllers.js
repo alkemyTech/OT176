@@ -31,7 +31,7 @@ module.exports = {
   createComment: async (req, res, next) => {
     try {
       const newComment = await Comments.create({
-        user_id: req.body.user_id,
+        user_id: req.user.id,
         body: req.body.body,
         news_id: req.body.news_id,
       });
@@ -62,19 +62,20 @@ module.exports = {
 
   // Delete Comment
 
-  delete: async (req, res, next) => {
-    /*
-    await Comments.destroy({
-      where: {
-        id: req.params.id,
-      },
-    })
-      .then((deletedComment) => {
-        res.status(200).json(deletedComment);
-      })
-      .catch((error) => {
-        res.status(500).json(error);
+  deleteComment: async (req, res, next) => {
+    try {
+      const delComments = await Comments.destroy({
+        where: { id: req.params.id },
       });
-      */
+      if (!delComments) {
+        return res.status(404).json({
+          success: false,
+          error: 'No comments found',
+        });
+      }
+      return res.status(200).json(delComments);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   },
 };
