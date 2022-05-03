@@ -6,7 +6,7 @@ const { Member } = require('../models');
 const memberController = {
 
   readAll: async (req = request, res = response) => {
-    const { limit = 10, page } = req.query;
+    const { limit = 10, page = 0 } = req.query;
     try {
       const data = await Member.findAndCountAll({
         limit,
@@ -16,6 +16,8 @@ const memberController = {
         },
       });
       res.status(200).json({
+        previousPage: `http://localhost:3000/members?page=${page == 0 ? 0 : page - 1}`,
+        nextPage: `http://localhost:3000/members?page=${parseInt(page) + 1}`,
         data,
       });
     } catch (error) {
