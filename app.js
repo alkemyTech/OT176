@@ -43,7 +43,6 @@ app.use('/backoffice', backofficeRouter);
 app.use('/api', documentationRouter);
 app.use('/organization', organizationRouter);
 
-
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
