@@ -28,10 +28,8 @@ const memberController = {
   },
   create: async (req = request, res = response) => {
     const {
-      name, image, description,
+      name, image, description,facebookUrl, instagramUrl, linkedinUrl
     } = req.body;
-
-    const { facebookUrl = undefined, instagramUrl = undefined, linkedinUrl = undefined } = req.body;
 
     try {
       await Member.create({
@@ -39,12 +37,13 @@ const memberController = {
       });
 
       res.status(200).json({
-        msg: 'Member created successfully !',
+        msg: 'Member created successfully!',
       });
     } catch (error) {
-      return res.status(400).json(
+     /*  return res.status(400).json(
         error.errors.map((err) => `msg: ${err.message}`)[0],
-      );
+      ); */
+      console.log('error', error)
     }
   },
 
