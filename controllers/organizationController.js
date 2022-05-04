@@ -13,8 +13,6 @@ module.exports = {
       });
   },
 
-
-
   fetchOne: async (req, res) => {
     await Organization.findByPk(req.params.id)
       .then((Organization) => {
@@ -63,7 +61,9 @@ module.exports = {
         },
       });
 
-      const { image, phone, address, facebook, instagram, linkedin  } = data;
+      const {
+        image, phone, address, facebook, instagram, linkedin,
+      } = data;
 
       if (data) {
         res.status(200).json({
@@ -73,7 +73,7 @@ module.exports = {
           address,
           facebook,
           instagram,
-          linkedin
+          linkedin,
         });
       }
     } catch (error) {

@@ -58,7 +58,8 @@ const memberValidation = {
     }
   },
   isAdminRole: async (req = request, res = response, next) => {
-    const { id } = await verifyToken(req.headers.token);
+    const token = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : res.json({ msg: 'Credentials has not been sent!' });
+    const { id } = await verifyToken(token);
     const user = await User.findOne({
       where: {
         id,

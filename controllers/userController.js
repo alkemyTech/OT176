@@ -67,7 +67,7 @@ const userController = {
       res.json(response);
     }
   },
-  signup: (req, res) => {
+  signup: async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -87,8 +87,10 @@ const userController = {
           lastName: req.body.lastName,
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 10),
-        }).then((user) => {
-          sendMail(user.email, template.subject, template.html).then(() => {
+        }).then(async (user) => {
+          const token = await createToken(user.id);
+          res.header('Authorization', `Bearer ${token}`);
+          await sendMail(user.email, template.subject, template.html).then(() => {
             const response = {
               message: 'Account created successfully! Check your email spam box!',
               data: {
@@ -122,14 +124,7 @@ const userController = {
       if (user) {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           console.log('User Authenticated');
-
           const token = await createToken(user.id);
-
-          res.header('token', token);
-          // res.cookie(token, {
-          //   expires: new Date(Date.now() + 900000),
-          //   httpOnly: true,
-          // });
           res.status(200).json({
             user,
             token,

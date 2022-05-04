@@ -28,7 +28,7 @@ const memberController = {
   },
   create: async (req = request, res = response) => {
     const {
-      name, image, description,facebookUrl, instagramUrl, linkedinUrl
+      name, image, description, facebookUrl, instagramUrl, linkedinUrl,
     } = req.body;
 
     try {
@@ -40,10 +40,9 @@ const memberController = {
         msg: 'Member created successfully!',
       });
     } catch (error) {
-     /*  return res.status(400).json(
+      return res.status(400).json(
         error.errors.map((err) => `msg: ${err.message}`)[0],
-      ); */
-      console.log('error', error)
+      );
     }
   },
 
