@@ -15,6 +15,7 @@ const membersRouter = require('./routes/members');
 const commentsController = require('./routes/comments');
 const contactsRouter = require('./routes/contact');
 const backofficeRouter = require('./routes/backoffice');
+const categoriesRouter = require('./routes/categories');
 const organizationRouter = require('./routes/organization');
 const documentationRouter = require('./routes/documentation');
 
@@ -40,8 +41,9 @@ app.use('/members', membersRouter);
 app.use('/comments', commentsController);
 app.use('/contacts', contactsRouter);
 app.use('/backoffice', backofficeRouter);
-app.use('/api', documentationRouter);
+app.use('/categories', categoriesRouter);
 app.use('/organization', organizationRouter);
+app.use('/api', documentationRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

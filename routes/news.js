@@ -3,22 +3,22 @@ const express = require('express');
 const router = express.Router();
 const validate = require('../middlewares/validate');
 const newValidator = require('../validations/news');
-const newController = require('../controllers/newController');
-
+const {
+  list, store, detail, update, removeNew,
+} = require('../controllers/newController');
 const authAdmin = require('../middlewares/authAdmin');
 const authenticated = require('../middlewares/authenticated');
 
 /* GET */
-router.get('/', newController.list);
-router.get('/:id', authenticated, authAdmin, newController.detail)
+router.get('/', list);
+router.get('/:id', authenticated, authAdmin, detail);
 
 /* POST NEWS */
-router.post('/', authenticated, authAdmin, validate(newValidator), newController.store)
-
+router.post('/', authenticated, authAdmin, validate(newValidator), store);
 /* PUT NEWS */
-router.put('/:id', authenticated, authAdmin, newController.update)
+router.put('/:id', authenticated, authAdmin, update);
 
 /* DELETE NEWS */
-router.delete('/:id', authenticated, authAdmin, newController.delete)
+router.delete('/:id', authenticated, authAdmin, removeNew);
 
 module.exports = router;
