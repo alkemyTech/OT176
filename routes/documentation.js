@@ -6,5 +6,4 @@ const documentationController = require('../controllers/documentationController'
 
 router.get('/docs', documentationController.docs);
 
-
 module.exports = router;

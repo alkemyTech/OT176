@@ -2,7 +2,11 @@ const { request, response } = require('express');
 const { validationResult } = require('express-validator');
 const { Op } = require('sequelize');
 
-const { Member } = require('../models');
+const {
+  Member,
+  User,
+} = require('../models');
+const { verifyToken } = require('../utils/jwt');
 
 const memberValidation = {
   socialMediaInUse: async (req = request, res = response, next) => {
@@ -22,7 +26,7 @@ const memberValidation = {
         },
       });
       if (user) {
-        // checks which social media is already taken
+        // eslint-disable-next-line max-len
         const socialMedia = instagramUrl == user.instagramUrl ? instagramUrl : facebookUrl == user.facebookUrl ? facebookUrl : linkedinUrl;
         return res.status(400).json({
           msg: `A user is already using ${socialMedia} as social media`,
@@ -53,6 +57,21 @@ const memberValidation = {
       next();
     }
   },
+  isAdminRole: async (req = request, res = response, next) => {
+    const { id } = await verifyToken(req.headers.token);
+    const user = await User.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (user.roleId !== 1) {
+      return res.status(400).json({
+        msg: 'User does not have the privilegies to do this',
+      });
+    }
+    next();
+  },
   errorsCheck: (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -62,15 +81,4 @@ const memberValidation = {
   },
 };
 
-const memberMiddleware = {
-  create: [
-    memberValidation.socialMediaInUse,
-    memberValidation.errorsCheck,
-  ],
-  update: [
-    memberValidation.memberExists,
-    memberValidation.errorsCheck,
-  ],
-};
-
-module.exports = memberMiddleware;
+module.exports = memberValidation;
