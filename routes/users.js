@@ -23,7 +23,7 @@ router.patch('/users/:id', userAuth.authenticated, userValidation.signup, awsIma
 router.get('/auth/me', userValidation.authorizations.token, getData);
 router.post('/auth/signup', userValidation.signup, signup);
 router.post('/auth/login', userValidation.login, login);
-router.post('/auth/upload', upload, authAdmin, awsImageUploader);
-router.delete('/:id', userController.delete);
+router.post('/auth/awsImgUpload', authAdmin, upload, imageValidator, awsImageUploader);
+router.put('/delete/:id', userController.delete);
 
 module.exports = router;

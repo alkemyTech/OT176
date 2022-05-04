@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const db = require('../models');
-const { createToken } = require('../utils/jwt');
+const { createToken, verifyToken } = require('../utils/jwt');
 const sendMail = require('../utils/sendMail');
 const template = require('../utils/emailTemplate');
 
@@ -120,11 +120,11 @@ const userController = {
 
           const token = await createToken(user.id);
 
-          res.header('token', token);
-          // res.cookie('token', token, {
-          //   expires: new Date(Date.now() + 900000),
-          //   httpOnly: true,
-          // });
+          /* res.header('token', token); */
+          res.cookie('token', token, {
+            expires: new Date(Date.now() + 900000),
+            httpOnly: true,
+          });
           res.status(200).json({
             user,
             token,
@@ -144,13 +144,16 @@ const userController = {
     }
   },
   getData: async (req, res) => {
-    const { token } = req.headers;
+    let token = req.headers || req.cookies;
+    token = token.cookie.split('').slice(6,token.cookie.length - 1).join('')
+
+    /*  let id= await verifyToken(token); */
 
     try {
       if (token) {
         const user = await db.User.findOne({
           where: {
-            token,
+            id: 11,
           },
         });
 
@@ -182,7 +185,6 @@ const userController = {
   },
   delete: async (req, res) => {
     const userId = Number(req.params.id);
-
     try {
       const user = await db.User.findOne({
         where: {
@@ -192,6 +194,7 @@ const userController = {
       });
 
       if (user) {
+        console.log('userToDel', user);
         await user.update({ is_deleted: true });
 
         res.json({
@@ -206,6 +209,14 @@ const userController = {
       return res.status(500).json({
         msg: 'Pelase contact the administrator',
       });
+    }
+  },
+  findById: async (id) => {
+    try {
+      const user = await db.User.findByPk(id);
+      return user;
+    } catch (error) {
+      console.log('error', error);
     }
   },
 };
