@@ -72,7 +72,7 @@ const newController = {
 
   // Delete
 
-  delete: async (req, res, next) => {
+  removeNew: async (req, res, next) => {
     try {
       const news = await db.New.findByPk(req.params.id);
 
