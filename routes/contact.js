@@ -8,6 +8,6 @@ const authOwnership = require('../middlewares/authOwnership');
 /* GET */
 router.get('/', authAdmin, contactController.list)
 /* POST */
-router.post('/', authOwnership, contactController.store)
+router.post('/', authOwnership, contactController.store);
 
 module.exports = router;
