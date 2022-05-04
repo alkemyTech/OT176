@@ -15,6 +15,7 @@ router.get('/:id', authenticated, authAdmin, detail);
 
 /* POST NEWS */
 router.post('/', authenticated, authAdmin, validate(newValidator), store);
+
 /* PUT NEWS */
 router.put('/:id', authenticated, authAdmin, update);
 
