@@ -27,26 +27,26 @@ const contactController = {
       if (!(req.body.email && req.body.name)) {
         res.status(400).send('Name and email are required');
       }
-      //Get contact information
+      // Get contact information
 
       const contacts = await db.Contact.create({
         name: req.body.name,
-		phone: req.body.phone,
-		email: req.body.email,
-		message: req.body.message,
+        phone: req.body.phone,
+        email: req.body.email,
+        message: req.body.message,
       });
 
-        // Welcome email
-		const msg = await {
+      // Welcome email
+      const msg = await {
 		  email: req.body.email,
 		  subject: 'welcome',
-		  message: 'welcome'
-      }
+		  message: 'welcome',
+      };
       sendEmail(msg);
 
       return res.status(201).json({
         success: true,
-		data: contacts,
+        data: contacts,
       });
     } catch (err) {
       return res.status(500).json({

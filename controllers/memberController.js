@@ -6,14 +6,18 @@ const { Member } = require('../models');
 const memberController = {
 
   readAll: async (req = request, res = response) => {
+    const { limit = 10, page = 0 } = req.query;
     try {
-      const data = await Member.findAll({
+      const data = await Member.findAndCountAll({
+        limit,
+        offset: limit * page,
         where: {
           is_deleted: false,
         },
       });
-
       res.status(200).json({
+        previousPage: `http://localhost:3000/members?page=${page == 0 ? 0 : page - 1}`,
+        nextPage: `http://localhost:3000/members?page=${parseInt(page) + 1}`,
         data,
       });
     } catch (error) {
@@ -24,10 +28,8 @@ const memberController = {
   },
   create: async (req = request, res = response) => {
     const {
-      name, image, description,
+      name, image, description,facebookUrl, instagramUrl, linkedinUrl
     } = req.body;
-
-    const { facebookUrl = undefined, instagramUrl = undefined, linkedinUrl = undefined } = req.body;
 
     try {
       await Member.create({
@@ -35,12 +37,13 @@ const memberController = {
       });
 
       res.status(200).json({
-        msg: 'Member created successfully !',
+        msg: 'Member created successfully!',
       });
     } catch (error) {
-      return res.status(400).json(
+     /*  return res.status(400).json(
         error.errors.map((err) => `msg: ${err.message}`)[0],
-      );
+      ); */
+      console.log('error', error)
     }
   },
 
@@ -71,33 +74,20 @@ const memberController = {
   },
 
   softDelete: async (req = request, res = response) => {
-    const { instagramUrl = false, facebookUrl = false, linkedinUrl = false } = req.query;
+    const { id } = req.params;
 
     try {
-      const data = await Member.findAll({
+      const member = await Member.findOne({
         where: {
-          [Op.or]: [
-            { instagramUrl },
-            { facebookUrl },
-            { linkedinUrl },
-          ],
-          [Op.and]: [
-            { is_deleted: false },
-          ],
+          id,
         },
       });
 
-      if (data[0]) {
-        await data[0].update({ is_deleted: true });
+      await member.update({ is_deleted: true });
 
-        res.status(200).json({
-          msg: 'Member has been soft-delete !!',
-        });
-      } else {
-        res.status(404).json({
-          msg: 'No members with the provided data exist in DB',
-        });
-      }
+      res.status(200).json({
+        msg: 'Member has been soft-delete !!',
+      });
     } catch (error) {
       res.status(500).json({
         msg: 'Please contact the administrator',

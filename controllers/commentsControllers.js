@@ -6,7 +6,7 @@ module.exports = {
   // Fetch all Comments
   fetchAll: async (req, res, next) => {
     try {
-      const allComments = Comments.findAll({
+      const allComments = await Comments.findAll({
         attributes: ['body'],
         order: [['createdAt', 'DESC']],
       });
@@ -31,7 +31,7 @@ module.exports = {
   createComment: async (req, res, next) => {
     try {
       const newComment = await Comments.create({
-        user_id: req.body.user_id,
+        user_id: req.user.id,
         body: req.body.body,
         news_id: req.body.news_id,
       });
@@ -44,40 +44,38 @@ module.exports = {
   // Update Comment
 
   update: async (req, res, next) => {
-
-    /*
-    await Comments.findByPk(req.params.id)
-
-      .then((commentToUpdate) => {
-        commentToUpdate.user_id = req.body.user_id;
-        commentToUpdate.body = req.body.body;
-        commentToUpdate.news_id = req.body.news_id;
-        commentToUpdate.save();
-      })
-      .then((updatedComment) => {
-        res.status(200).json(updatedComment);
-      })
-      .catch((error) => {
-        res.status(500).json(error);
+    try {
+      const updComments = await Comments.update(req.body, {
+        where: { id: req.params.id },
       });
-      */
+      if (!updComments) {
+        return res.status(404).json({
+          success: false,
+          error: 'No comments found',
+        });
+      }
+      return res.status(200).json(updComments);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   },
 
   // Delete Comment
 
-  delete: async (req, res, next) => {
-    /*
-    await Comments.destroy({
-      where: {
-        id: req.params.id,
-      },
-    })
-      .then((deletedComment) => {
-        res.status(200).json(deletedComment);
-      })
-      .catch((error) => {
-        res.status(500).json(error);
+  deleteComment: async (req, res, next) => {
+    try {
+      const delComments = await Comments.destroy({
+        where: { id: req.params.id },
       });
-      */
+      if (!delComments) {
+        return res.status(404).json({
+          success: false,
+          error: 'No comments found',
+        });
+      }
+      return res.status(200).json(delComments);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   },
 };

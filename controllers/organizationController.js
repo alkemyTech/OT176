@@ -2,10 +2,8 @@ const db = require("../models");
 const models = require("../models");
 const Organization = models.Organization
 module.exports = {
-    //Fetch all Organization
-    fetchAll: async (req, res) => {
-        await Organization.findAll()
-
+  fetchAll: async (req, res) => {
+    await Organization.findAll()
             .then(function (Organizations) {
                 res.status(200).json(Organizations);
             })
@@ -13,9 +11,6 @@ module.exports = {
                 res.status(500).json(error);
             });
     },
-
-    //Fetch a Organization
-
     fetchOne: async (req, res) => {
 
         await Organization.findByPk(req.params.id)
@@ -26,7 +21,6 @@ module.exports = {
                 res.status(500).json(error);
             });
     },
-
 
     // Create Organization
 
@@ -66,7 +60,7 @@ module.exports = {
         },
       });
 
-      const { image, phone, address,  } = data;
+      const { image, phone, address, facebook, instagram, linkedin  } = data;
 
       if (data) {
         res.status(200).json({
@@ -74,6 +68,9 @@ module.exports = {
           image,
           phone,
           address,
+          facebook,
+          instagram,
+          linkedin
         });
       }
     } catch (error) {
