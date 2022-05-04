@@ -6,7 +6,6 @@ const sendMail = require('../utils/sendMail');
 const template = require('../utils/emailTemplate');
 
 const userController = {
-
   userList: (req, res) => {
     db.User.findAll()
       .then((result) => {
@@ -24,45 +23,46 @@ const userController = {
   userEdit: (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({
+      res.status(400).json({
         errors: errors.array(),
       });
-    }
-    const {
-      firstName, lastName, email, image,
-    } = req.body;
-    const user = db.User.findByPk(req.params.id);
-    if (user !== '') {
-      db.User.update(
-        {
-          firstName,
-          lastName,
-          email,
-          image,
-        },
-        {
-          where: {
-            id: req.params.id,
-          },
-        },
-      )
-        .then((result) => {
-          const response = {
-            status: 200,
-            message: 'User updated successfully!',
-            data: result,
-          };
-          res.json(response);
-        })
-        .catch((error) => {
-          res.json(error);
-        });
     } else {
-      const response = {
-        status: 404,
-        message: 'User not found!',
-      };
-      res.json(response);
+      const {
+        firstName, lastName, email, image,
+      } = req.body;
+      const user = db.User.findByPk(req.params.id);
+      if (user !== '') {
+        db.User.update(
+          {
+            firstName,
+            lastName,
+            email,
+            image,
+          },
+          {
+            where: {
+              id: req.params.id,
+            },
+          },
+        )
+          .then((result) => {
+            const response = {
+              status: 200,
+              message: 'User updated successfully!',
+              data: result,
+            };
+            res.json(response);
+          })
+          .catch((error) => {
+            res.json(error);
+          });
+      } else {
+        const response = {
+          status: 404,
+          message: 'User not found!',
+        };
+        res.json(response);
+      }
     }
   },
   signup: (req, res) => {
