@@ -80,24 +80,27 @@ const userController = {
       },
     }).then((possibleUser) => {
       if (possibleUser) {
-        res.json('User already exists');
+        res.json({ msg: 'User already exists' });
       } else {
         db.User.create({
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 10),
-        }).then(async (user) => {
-          sendMail(user.email, template.subject, template.html);
-          const response = {
-            message: 'Account created successfully! Check your email spam box!',
-            data: {
-              firstName: user.firstName,
-              lastName: user.lastName,
-              email: user.email,
-            },
-          };
-          res.json(response);
+        }).then((user) => {
+          sendMail(user.email, template.subject, template.html).then(() => {
+            const response = {
+              message: 'Account created successfully! Check your email spam box!',
+              data: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+              },
+            };
+            return res.json(response);
+          }).catch((err) => res.status(500).json({
+            msg: `Please contact the administrator, Error: ${err.message}`,
+          }));
         });
       }
     });
