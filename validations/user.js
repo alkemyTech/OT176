@@ -40,7 +40,7 @@ const userValidator = {
 
     body('password').notEmpty().withMessage('You must complete the password field').bail(),
   ],
-  edit:[
+  edit: [
     body('firstName')
       .isAlpha()
       .withMessage('The first name must contain only letters, not numbers')

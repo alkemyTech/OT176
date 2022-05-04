@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Comments',
+    paranoid: true,
   });
   return Comments;
 };

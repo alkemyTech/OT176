@@ -10,6 +10,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const newsRouter = require('./routes/news');
 const testimonialRouter = require('./routes/testimonials');
+const slidesRouter = require('./routes/slides');
 const membersRouter = require('./routes/members');
 const commentsController = require('./routes/comments');
 const contactsRouter = require('./routes/contact');
@@ -35,13 +36,19 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/news', newsRouter);
 app.use('/testimonials', testimonialRouter);
+app.use('/slides', slidesRouter);
 app.use('/members', membersRouter);
 app.use('/comments', commentsController);
 app.use('/contacts', contactsRouter);
 app.use('/backoffice', backofficeRouter);
+<<<<<<< OT176-41
 app.use('/categories', categoriesRouter);
 app.use('/organization', organizationRouter);
 app.use('/api', documentationRouter);
+=======
+app.use('/api', documentationRouter);
+app.use('/organization', organizationRouter);
+>>>>>>> develop
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -49,6 +56,7 @@ app.use((req, res, next) => {
 });
 
 // error handler
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;

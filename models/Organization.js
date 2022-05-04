@@ -23,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     aboutUsText: DataTypes.TEXT,
     deletedAt: DataTypes.DATE,
     facebook: DataTypes.STRING,
-    instagram:DataTypes.STRING,
-    linkedin: DataTypes.STRING
+    instagram: DataTypes.STRING,
+    linkedin: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Organization',

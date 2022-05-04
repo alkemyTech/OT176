@@ -2,7 +2,8 @@ const db = require('../models');
 const sendEmail = require('../utils/sendMail');
 
 const contactController = {
-  // Find all contacts
+// Find all contacts
+
   list: async (req, res, next) => {
     try {
       const contacts = await db.Contact.findAll({});
@@ -22,11 +23,10 @@ const contactController = {
 
   store: async (req, res, next) => {
     try {
-      // Validate user input
+    // Validate user input
       if (!(req.body.email && req.body.name)) {
         res.status(400).send('Name and email are required');
       }
-
       // Get contact information
 
       const contacts = await db.Contact.create({
@@ -37,10 +37,12 @@ const contactController = {
       });
 
       // Welcome email
-      const to = req.body.email;
-      const subject = 'welcome';
-      const message = 'welcome';
-      await sendEmail(to, subject, message);
+      const msg = await {
+		  email: req.body.email,
+		  subject: 'welcome',
+		  message: 'welcome',
+      };
+      sendEmail(msg);
 
       return res.status(201).json({
         success: true,
@@ -48,8 +50,8 @@ const contactController = {
       });
     } catch (err) {
       return res.status(500).json({
-        success: false,
-        error: 'Server Error',
+	  success: false,
+	  error: 'Server Error',
       });
     }
   },

@@ -47,15 +47,14 @@ const userController = {
         },
       )
         .then(() => {
-         db.User.findByPk(req.params.id).then(user=>{
+          db.User.findByPk(req.params.id).then((user) => {
             const response = {
               status: 200,
               message: 'User updated successfully!',
               data: user,
             };
             res.json(response);
-          })
-         
+          });
         })
         .catch((error) => {
           res.json(error);
@@ -81,24 +80,27 @@ const userController = {
       },
     }).then((possibleUser) => {
       if (possibleUser) {
-        res.json('User already exists');
+        res.json({ msg: 'User already exists' });
       } else {
         db.User.create({
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 10),
-        }).then(async (user) => {
-          sendMail(user.email, template.subject, template.html);
-          const response = {
-            message: 'Account created successfully! Check your email spam box!',
-            data: {
-              firstName: user.firstName,
-              lastName: user.lastName,
-              email: user.email,
-            },
-          };
-          res.json(response);
+        }).then((user) => {
+          sendMail(user.email, template.subject, template.html).then(() => {
+            const response = {
+              message: 'Account created successfully! Check your email spam box!',
+              data: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+              },
+            };
+            return res.json(response);
+          }).catch((err) => res.status(500).json({
+            msg: `Please contact the administrator, Error: ${err.message}`,
+          }));
         });
       }
     });
@@ -123,11 +125,11 @@ const userController = {
 
           const token = await createToken(user.id);
 
-          /* res.header('token', token); */
-          res.cookie('token', token, {
-            expires: new Date(Date.now() + 900000),
-            httpOnly: true,
-          });
+          res.header('token', token);
+          // res.cookie(token, {
+          //   expires: new Date(Date.now() + 900000),
+          //   httpOnly: true,
+          // });
           res.status(200).json({
             user,
             token,
@@ -147,17 +149,13 @@ const userController = {
     }
   },
   getData: async (req, res) => {
-    let token = req.headers || req.cookies;
-    token = token.cookie.split('').slice(6,token.cookie.length - 1).join('')
-
-   /*  let id= await verifyToken(token); */
-
+    const { id } = await verifyToken(req.headers.token);
 
     try {
-      if (token) {
+      if (id) {
         const user = await db.User.findOne({
           where: {
-           id:11,
+            id,
           },
         });
 
@@ -189,7 +187,7 @@ const userController = {
   },
   delete: async (req, res) => {
     const userId = Number(req.params.id);
-    
+
     try {
       const user = await db.User.findOne({
         where: {
@@ -199,7 +197,7 @@ const userController = {
       });
 
       if (user) {
-        console.log('userToDel', user)
+        console.log('userToDel', user);
         await user.update({ is_deleted: true });
 
         res.json({

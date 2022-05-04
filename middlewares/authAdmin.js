@@ -11,7 +11,7 @@ const authAdmin = async (req, res, next) => {
 
     const user = await db.User.findOne({
       where: {
-        id:decodeToken.id
+        id: decodeToken.id,
       },
     });
     if (user.roleId !== 1) {

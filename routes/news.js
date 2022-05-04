@@ -10,6 +10,7 @@ const authAdmin = require('../middlewares/authAdmin');
 const authenticated = require('../middlewares/authenticated');
 
 /* GET */
+<<<<<<< OT176-41
 router.get('/', list);
 router.get('/:id', authenticated, authAdmin, detail);
 
@@ -21,5 +22,18 @@ router.put('/:id', authenticated, authAdmin, update);
 
 /* DELETE NEWS */
 router.delete('/:id', authenticated, authAdmin, delete);
+=======
+router.get('/', newController.list);
+router.get('/:id', authenticated, authAdmin, newController.detail)
+
+/* POST NEWS */
+router.post('/', authenticated, authAdmin, validate(newValidator), newController.store)
+
+/* PUT NEWS */
+router.put('/:id', authenticated, authAdmin, newController.update)
+
+/* DELETE NEWS */
+router.delete('/:id', authenticated, authAdmin, newController.delete)
+>>>>>>> develop
 
 module.exports = router;
