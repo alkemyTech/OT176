@@ -63,11 +63,7 @@ module.exports = {
         },
       });
 
-<<<<<<< HEAD
-      const { image, phone, address } = data;
-=======
       const { image, phone, address, facebook, instagram, linkedin  } = data;
->>>>>>> 342e8bf3eeefadf0e23117ac0f69273a2c56b1e1
 
       if (data) {
         res.status(200).json({
