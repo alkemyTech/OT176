@@ -14,13 +14,31 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Organization.init({
-    name: DataTypes.STRING,
-    image: DataTypes.STRING,
-    address: DataTypes.STRING,
-    phone: DataTypes.INTEGER,
-    email: DataTypes.STRING,
-    welcomeText: DataTypes.TEXT,
-    aboutUsText: DataTypes.TEXT,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    address: {
+      type: DataTypes.STRING,
+    },
+    phone: {
+      type: DataTypes.INTEGER,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    welcomeText: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    aboutUsText: {
+      type: DataTypes.TEXT,
+    },
     deletedAt: DataTypes.DATE,
     facebook: DataTypes.STRING,
     instagram: DataTypes.STRING,
@@ -29,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Organization',
     paranoid: true,
+    timestamps: true,
   });
   return Organization;
 };

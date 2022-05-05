@@ -36,13 +36,8 @@ const contactController = {
         message: req.body.message,
       });
 
-    /*   // Welcome email
-      const msg = await {
-		  email: req.body.email,
-		  subject: 'welcome',
-		  message: 'welcome',
-      };
-      sendEmail(msg); */
+      // Welcome email
+      await sendEmail(req.body.email, 'Welcome to Somos Más', 'Welcome to Somos Más');
 
       return res.status(201).json({
         success: true,

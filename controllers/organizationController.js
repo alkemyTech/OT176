@@ -1,33 +1,30 @@
-const { Organization } = require('../models');
-
+const db = require("../models");
+const models = require("../models");
+const Organization = models.Organization
 module.exports = {
-
   fetchAll: async (req, res) => {
     await Organization.findAll()
+            .then(function (Organizations) {
+                res.status(200).json(Organizations);
+            })
+            .catch(function (error) {
+                res.status(500).json(error);
+            });
+    },
+    fetchOne: async (req, res) => {
 
-      .then((Organizations) => {
-        res.status(200).json(Organizations);
-      })
-      .catch((error) => {
-        res.status(500).json(error);
-      });
-  },
+        await Organization.findByPk(req.params.id)
+            .then(function (Organization) {
+                res.status(200).json(Organization);
+            })
+            .catch(function (error) {
+                res.status(500).json(error);
+            });
+    },
 
+    // Create Organization
 
-
-  fetchOne: async (req, res) => {
-    await Organization.findByPk(req.params.id)
-      .then((Organization) => {
-        res.status(200).json(Organization);
-      })
-      .catch((error) => {
-        res.status(500).json(error);
-      });
-  },
-
-  // Create Organization
-
-  create: async (req, res) => {
+     create: async (req, res) => {
     await Organization.create({
       name: req.body.name,
       image: req.body.image,
@@ -47,7 +44,8 @@ module.exports = {
         res.status(500).json(error);
       });
   },
-  getData: async (req, res) => {
+  
+    getData: async (req, res) => {
     const { name } = req.query;
 
     if (!name) {
@@ -55,7 +53,6 @@ module.exports = {
         msg: 'Org name should be provided',
       });
     }
-
     try {
       const data = await Organization.findOne({
         where: {
@@ -82,31 +79,37 @@ module.exports = {
       });
     }
   },
-  // Update Organization
 
-  update: async (req, res) => {
-    await Organization.findByPk(req.params.id)
+    //Update Organization
 
-      .then((OrganizationToUpdate) => {
-        OrganizationToUpdate.name = req.body.name;
-        OrganizationToUpdate.image = req.body.image;
-        OrganizationToUpdate.address = req.body.address;
-        OrganizationToUpdate.phone = req.body.phone;
-        OrganizationToUpdate.email = req.body.email;
-        OrganizationToUpdate.welcomeText = req.body.welcomeText;
-        OrganizationToUpdate.aboutUsText = req.body.aboutUsText;
-        OrganizationToUpdate.facebook = req.body.facebook;
-        OrganizationToUpdate.instagram = req.body.instagram;
-        OrganizationToUpdate.linkedin = req.body.linkedin;
-        OrganizationToUpdate.save();
-      })
-      .then((updatedOrganization) => {
-        res.status(200).json(updatedOrganization);
-      })
-      .catch((error) => {
-        res.status(500).json(error);
-      });
-  },
+    organizationUpdate: (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({
+            errors: errors.array(),
+          });
+        } else {
+            const { name, image, address, phone, email, welcomeText, aboutUsText} = req.body;
+            db.Organization.update({
+                name,
+                image,
+                address,
+                phone,
+                email,
+                welcomeText,
+                aboutUsText,
+            })
+            .then((result) => {
+                const resolve = {
+                    status: 200,
+                    message: 'Public data organization updated successfully!',
+                    data: result,
+                };
+                res.json(resolve);
+            })
+            .catch(error => res.json(error));
+        }
+    },
 
   // Delete Organization
 
