@@ -1,6 +1,4 @@
-const {
-  Model,
-} = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Organization extends Model {
@@ -11,16 +9,36 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Organization.hasMany(models.Slides, { as: 'slides', foreignKey: 'organizationId' });
     }
   }
+
   Organization.init({
-    name: DataTypes.STRING,
-    image: DataTypes.STRING,
-    address: DataTypes.STRING,
-    phone: DataTypes.INTEGER,
-    email: DataTypes.STRING,
-    welcomeText: DataTypes.TEXT,
-    aboutUsText: DataTypes.TEXT,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    address: {
+      type: DataTypes.STRING,
+    },
+    phone: {
+      type: DataTypes.INTEGER,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    welcomeText: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    aboutUsText: {
+      type: DataTypes.TEXT,
+    },
     deletedAt: DataTypes.DATE,
     facebook: DataTypes.STRING,
     instagram: DataTypes.STRING,
@@ -29,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Organization',
     paranoid: true,
+    timestamps: true,
   });
   return Organization;
 };

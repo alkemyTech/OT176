@@ -17,6 +17,9 @@ module.exports = {
       errorMessage: 'image is required',
       bail: true,
     },
+    isUrl: {
+      errorMessage: 'image must be URL',
+    },
   },
   categoryId: {
     notEmpty: {

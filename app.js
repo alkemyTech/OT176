@@ -18,6 +18,7 @@ const backofficeRouter = require('./routes/backoffice');
 const categoriesRouter = require('./routes/categories');
 const organizationRouter = require('./routes/organization');
 const documentationRouter = require('./routes/documentation');
+const activitieRouter = require('./routes/activities')
 
 const app = express();
 app.use(cors());
@@ -41,14 +42,9 @@ app.use('/members', membersRouter);
 app.use('/comments', commentsController);
 app.use('/contacts', contactsRouter);
 app.use('/backoffice', backofficeRouter);
-<<<<<<< OT176-41
 app.use('/categories', categoriesRouter);
 app.use('/organization', organizationRouter);
 app.use('/api', documentationRouter);
-=======
-app.use('/api', documentationRouter);
-app.use('/organization', organizationRouter);
->>>>>>> develop
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
