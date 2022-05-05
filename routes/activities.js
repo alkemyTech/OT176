@@ -12,7 +12,7 @@ const {
   putValidator,
 } = require('../middlewares/activitiesMiddlewares');
 
-router.post('/', postValidator, postActivities);
-router.put('/:id', putValidator, putActivities);
+router.post('/'/* , postValidator */, postActivities);
+router.put('/:id'/* , putValidator, */, putActivities);
 
 module.exports = router;
