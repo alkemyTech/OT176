@@ -54,7 +54,10 @@ module.exports = {
           error: 'No comments found',
         });
       }
-      return res.status(200).json(updComments);
+
+      const CommentUpdated = await Comments.findByPk(req.params.id)
+
+      return res.status(200).json({msg:'Comment successfully updated',data:CommentUpdated});
     } catch (error) {
       return res.status(500).json(error);
     }
@@ -73,7 +76,7 @@ module.exports = {
           error: 'No comments found',
         });
       }
-      return res.status(200).json(delComments);
+      return res.status(200).json('Comment successfully deleted');
     } catch (error) {
       return res.status(500).json(error);
     }

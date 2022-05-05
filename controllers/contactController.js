@@ -36,13 +36,13 @@ const contactController = {
         message: req.body.message,
       });
 
-      // Welcome email
+    /*   // Welcome email
       const msg = await {
 		  email: req.body.email,
 		  subject: 'welcome',
 		  message: 'welcome',
       };
-      sendEmail(msg);
+      sendEmail(msg); */
 
       return res.status(201).json({
         success: true,
