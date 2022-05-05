@@ -5,8 +5,21 @@ const categoryController = {
   categoryCreate: (req, res, next) => {
 
   },
-  categoryList: (req, res, next) => {
-
+  categoryList: (req, res) => {
+    db.Category.findAll({
+      attributes: ['name'],
+    })
+      .then((result) => {
+        const response = {
+          status: 200,
+          message: 'OK',
+          data: result,
+        };
+        res.json(response);
+      })
+      .catch((error) => {
+        res.json(error);
+      });
   },
   categoryDetail: (req, res) => {
     db.Category.findByPk({

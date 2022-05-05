@@ -10,8 +10,7 @@ const authAdmin = require('../middlewares/authAdmin');
 const authenticated = require('../middlewares/authenticated');
 
 /* GET */
-//router.get('/', authenticated, list);
-
+router.get('/', list);
 router.get('/:id', authenticated, authAdmin, detail);
 
 /* POST NEWS */
