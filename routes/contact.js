@@ -8,6 +8,6 @@ const authAdmin = require('../middlewares/authAdmin');
 router.get('/', authAdmin, contactController.list)
 
 /* POST */
-router.post('/', authOwnership, contactController.store);
+router.post('/', contactController.store);
 
 module.exports = router;
