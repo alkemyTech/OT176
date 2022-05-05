@@ -37,10 +37,11 @@ const newController = {
         data: news,
       });
     } catch (err) {
-      return res.status(500).json({
+      /* return res.status(500).json({
         success: false,
         error: 'Server Error',
-      });
+      }); */
+      console.log('error', err)
     }
   },
   // Update News
@@ -58,9 +59,12 @@ const newController = {
         });
       }
 
+      const newNews = await db.New.findByPk( req.params.id)
+      
+
       return res.status(201).json({
         success: true,
-        data: {},
+        data: {newNews},
       });
     } catch (err) {
       return res.status(500).json({
@@ -72,7 +76,7 @@ const newController = {
 
   // Delete
 
-  delete: async (req, res, next) => {
+  removeNew: async (req, res, next) => {
     try {
       const news = await db.New.findByPk(req.params.id);
 
@@ -86,7 +90,7 @@ const newController = {
 
       return res.status(200).json({
         success: true,
-        data: {},
+        data: 'The news has been successfully deleted',
       });
     } catch (err) {
       return res.status(500).json({

@@ -145,6 +145,7 @@ const userController = {
   },
   getData: async (req, res) => {
     const { id } = await verifyToken(req.headers.token);
+    console.log('idToken', id)
 
     try {
       if (id) {

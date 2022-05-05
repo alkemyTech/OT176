@@ -18,15 +18,24 @@ module.exports = {
   putActivities: async (req, res, next) => {
     try {
       const { name, image, content } = req.body;
-      const { id } = req.params;
 
-      await Activity.update({ name, image, content }, { where: { id } });
+     const activityToUpdate =  await Activity.update({ name, image, content }, { where: { id:req.params.id } });
 
-      const activityEdited = await Activity.findByPk(id);
+     if (!activityToUpdate) {
+      return res.status(404).json({
+        success: false,
+        error: 'No activity found',
+      });
+    }
+
+
+      const activityEdited = await Activity.findByPk(req.params.id);
+
+      console.log('activityEdited', activityEdited)
 
       res.status(200).json(activityEdited);
     } catch (error) {
-      next(error);
+      console.log('error', error)
     }
   },
 };
