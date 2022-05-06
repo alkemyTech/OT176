@@ -31,13 +31,11 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      is_deleted: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
-        defaultValue: false,
-      },
       createdAt: {
         allowNull: false,
+        type: DataTypes.DATE,
+      },
+      deletedAt: {
         type: DataTypes.DATE,
       },
       updatedAt: {

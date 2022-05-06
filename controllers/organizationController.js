@@ -11,10 +11,6 @@ module.exports = {
         res.status(500).json(error);
       });
   },
-<<<<<<< HEAD
-
-=======
->>>>>>> b88785b07c6094b87bcca35fcc543e60be8eca3c
   fetchOne: async (req, res) => {
     await Organization.findByPk(req.params.id)
       .then((data) => {
@@ -66,11 +62,7 @@ module.exports = {
       });
 
       const {
-<<<<<<< HEAD
-        image, phone, address, facebook, instagram, linkedin,
-=======
         image, phone, address, facebook, instagram, linkedin, slides,
->>>>>>> b88785b07c6094b87bcca35fcc543e60be8eca3c
       } = data;
 
       if (data) {
@@ -82,10 +74,7 @@ module.exports = {
           facebook,
           instagram,
           linkedin,
-<<<<<<< HEAD
-=======
           slides,
->>>>>>> b88785b07c6094b87bcca35fcc543e60be8eca3c
         });
       }
     } catch (error) {

@@ -1,5 +1,4 @@
 const { request, response } = require('express');
-const { Op } = require('sequelize');
 
 const { Member } = require('../models');
 
@@ -12,15 +11,16 @@ const memberController = {
         limit,
         offset: limit * page,
         where: {
-          is_deleted: false,
+          deletedAt: null,
         },
       });
       res.status(200).json({
-        previousPage: `http://localhost:3000/members?page=${page == 0 ? 0 : page - 1}`,
+        previousPage: `http://localhost:3000/members?page=${page <= 0 ? 0 : page - 1}`,
         nextPage: `http://localhost:3000/members?page=${parseInt(page) + 1}`,
         data,
       });
     } catch (error) {
+      console.log(error);
       res.status(400).json({
         msg: 'Please contact the administrator',
       });
@@ -49,7 +49,7 @@ const memberController = {
   Update: async (req = request, res = response) => {
     const { id } = req.params;
     const {
-      name, image, facebookUrl, instagramUrl, linkedinUrl, description, is_deleted,
+      name, image, facebookUrl, instagramUrl, linkedinUrl, description,
     } = req.body;
 
     const member = await Member.findOne({
@@ -74,15 +74,12 @@ const memberController = {
 
   softDelete: async (req = request, res = response) => {
     const { id } = req.params;
-
     try {
-      const member = await Member.findOne({
+      await Member.destroy({
         where: {
           id,
         },
       });
-
-      await member.update({ is_deleted: true });
 
       res.status(200).json({
         msg: 'Member has been soft-delete !!',

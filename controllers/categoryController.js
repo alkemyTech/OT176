@@ -77,7 +77,8 @@ const categoryController = {
           res.json(response);
         })
         .catch((error) => res.json(error));
-    },
+    }
+  },
   categoryDetail: (req, res) => {
     db.Category.findByPk({
       where: {

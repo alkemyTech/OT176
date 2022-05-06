@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const methodOverride = require('method-override');
+// const methodOverride = require('method-override');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -19,7 +19,7 @@ const backofficeRouter = require('./routes/backoffice');
 const categoriesRouter = require('./routes/categories');
 const organizationRouter = require('./routes/organization');
 const documentationRouter = require('./routes/documentation');
-const activitieRouter = require('./routes/activities')
+// const activitieRouter = require('./routes/activities');
 
 const app = express();
 app.use(cors());
@@ -33,7 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride('_method'));
+// app.use(methodOverride('_method'));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -44,7 +44,7 @@ app.use('/members', membersRouter);
 app.use('/comments', commentsController);
 app.use('/contacts', contactsRouter);
 app.use('/backoffice', backofficeRouter);
-app.use('/categories', categoriesRouter);
+// app.use('/categories', categoriesRouter);
 app.use('/organization', organizationRouter);
 app.use('/api', documentationRouter);
 
