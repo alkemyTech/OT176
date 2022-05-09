@@ -1,5 +1,5 @@
 const { Slides } = require('../models');
-const awsUpload = require('../utils/awsUpload');
+const { awsUpload } = require('../utils/awsActions');
 
 const getSlides = async (req, res, next) => {
   try {
@@ -41,6 +41,33 @@ const getOneSlides = async (req, res, next) => {
   }
 };
 
+const updateSlide = async (req, res, next) => {
+  const { text, organizationId, order } = req.body;
+  const { id } = req.params;
+  try {
+    if (!id) throw new Error('Invalid Id');
+    const slide = await Slides.findByPk(id);
+    if (!slide) throw new Error('Item not found');
+    let imageUrl = slide.imageUrl || '';
+
+    if (typeof req.file !== 'undefined') {
+      // if (imageUrl !== '') {
+      //   await awsDelete(imageUrl);
+      // }
+      imageUrl = await awsUpload(req.file);
+    }
+
+    Object.assign(slide, {
+      text, organizationId, order, imageUrl,
+    });
+    await slide.save();
+
+    res.json({ message: 'Update Success', slide });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const deleteSlide = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -48,6 +75,7 @@ const deleteSlide = async (req, res, next) => {
     const slide = await Slides.findByPk(id);
     if (!slide) throw new Error('Item not found');
     await slide.destroy();
+    // await awsDelete(slide.imageUrl);
     res.json({ message: 'Delete Success', slide });
   } catch (error) {
     next(error);
@@ -55,5 +83,5 @@ const deleteSlide = async (req, res, next) => {
 };
 
 module.exports = {
-  getSlides, createSlide, getOneSlides, deleteSlide,
+  getSlides, createSlide, getOneSlides, deleteSlide, updateSlide,
 };

@@ -27,4 +27,25 @@ const awsUpload = async (fileImage) => {
   }
 };
 
-module.exports = awsUpload;
+/**
+ * function to delete image in amazon s3
+ * @param {string} fullUrlImage (https://aws...././..jpg)
+ * @returns {Boolean} true if deleted success
+ */
+const awsDelete = async (fullUrlImage) => {
+  const fileName = new URL(fullUrlImage).pathname.split('/').pop();
+  const params = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: fileName, // name with extension
+  };
+  try {
+    await s3.headObject(params).promise(); // found if exists
+    await s3.deleteObject(params).promise();
+    return;
+  } catch (err) {
+    // console.log(`${JSON.stringify(err)}`);
+    throw new Error(err.message);
+  }
+};
+
+module.exports = { awsUpload, awsDelete };

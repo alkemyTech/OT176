@@ -6,7 +6,6 @@ const sendMail = require('../utils/sendMail');
 const template = require('../utils/emailTemplate');
 
 const userController = {
-
   userList: (req, res) => {
     db.User.findAll()
       .then((result) => {
@@ -24,50 +23,50 @@ const userController = {
   userEdit: (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({
+      res.status(400).json({
         errors: errors.array(),
       });
-    }
-    const {
-      firstName, lastName, email, image,
-    } = req.body;
-    const user = db.User.findByPk(req.params.id);
-    if (user !== '') {
-      db.User.update(
-        {
-          firstName,
-          lastName,
-          email,
-          image,
-        },
-        {
-          where: {
-            id: req.params.id,
+    } else {
+      const {
+        firstName, lastName, email, image,
+      } = req.body;
+      const user = db.User.findByPk(req.params.id);
+      if (user !== '') {
+        db.User.update(
+          {
+            firstName,
+            lastName,
+            email,
+            image,
           },
-        },
-      )
-        .then(() => {
-          db.User.findByPk(req.params.id).then((user) => {
+          {
+            where: {
+              id: req.params.id,
+            },
+          },
+        )
+          .then((result) => {
             const response = {
               status: 200,
               message: 'User updated successfully!',
-              data: user,
+              data: result,
             };
             res.json(response);
+          })
+          .catch((error) => {
+            res.json(error);
           });
-        })
-        .catch((error) => {
-          res.json(error);
-        });
-    } else {
-      const response = {
-        status: 404,
-        message: 'User not found!',
-      };
-      res.json(response);
+      } else {
+        const response = {
+          status: 404,
+          message: 'User not found!',
+          data: result,
+        };
+        res.json(response);
+      }
     }
   },
-  signup: (req, res) => {
+  signup: async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -87,8 +86,10 @@ const userController = {
           lastName: req.body.lastName,
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 10),
-        }).then((user) => {
-          sendMail(user.email, template.subject, template.html).then(() => {
+        }).then(async (user) => {
+          const token = await createToken(user.id);
+          res.header('Authorization', `Bearer ${token}`);
+          await sendMail(user.email, template.subject, template.html).then(() => {
             const response = {
               message: 'Account created successfully! Check your email spam box!',
               data: {
@@ -122,14 +123,7 @@ const userController = {
       if (user) {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           console.log('User Authenticated');
-
           const token = await createToken(user.id);
-
-          res.header('token', token);
-          // res.cookie(token, {
-          //   expires: new Date(Date.now() + 900000),
-          //   httpOnly: true,
-          // });
           res.status(200).json({
             user,
             token,
@@ -150,7 +144,7 @@ const userController = {
   },
   getData: async (req, res) => {
     const { id } = await verifyToken(req.headers.token);
-
+    console.log('idToken', id)
     try {
       if (id) {
         const user = await db.User.findOne({
@@ -187,7 +181,6 @@ const userController = {
   },
   delete: async (req, res) => {
     const userId = Number(req.params.id);
-
     try {
       const user = await db.User.findOne({
         where: {
