@@ -6,40 +6,33 @@ const { expect } = require('chai');
 const { get } = require('http');
 const server = require('../app');
 const app = require('../app');
-const { User } = require('../models');
-const { createToken } = require('../utils/jwt');
 const testing = require('../utils/membersTest');
+const db = require('../models');
 
 chai.use(chaiHttp);
 
 let adminToken, userToken;
 
-beforeEach((done) => {
+beforeEach(async () => {
   chai
     .request(app)
     .post('/users/auth/login')
     .send(testing.admin)
     .end((err, res) => {
       adminToken = res.body.token;
-      done();
     });
-});
 
-beforeEach( async () => {
   await chai
     .request(app)
     .post('/members')
     .send(testing.socialMediaTest);
-});
 
-beforeEach((done) => {
   chai
     .request(app)
     .post('/users/auth/login')
     .send(testing.regularUser)
     .end((err, res) => {
       userToken = res.body.token;
-      done();
     });
 });
 
