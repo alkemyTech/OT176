@@ -60,7 +60,6 @@ const userController = {
         const response = {
           status: 404,
           message: 'User not found!',
-          data: result,
         };
         res.json(response);
       }
@@ -102,9 +101,39 @@ const userController = {
           }).catch((err) => res.status(500).json({
             msg: `Please contact the administrator, Error: ${err.message}`,
           }));
+        })
+          .catch((err) => res.status(500).json(err));
+      }
+    })
+      .catch((err) => res.status(500).json(err));
+  },
+  userDelete: async (req, res) => {
+    const userId = Number(req.params.id);
+    try {
+      const user = await db.User.findOne({
+        where: {
+          id: userId,
+          is_deleted: false,
+        },
+      });
+
+      if (user) {
+        console.log('userToDel', user);
+        await user.update({ is_deleted: true });
+
+        res.json({
+          msg: 'The user has been soft-deleted',
+        });
+      } else {
+        res.status(404).json({
+          msg: `No users with id: ${userId}, were found !`,
         });
       }
-    });
+    } catch (error) {
+      return res.status(500).json({
+        msg: 'Pelase contact the administrator',
+      });
+    }
   },
   // End User CRUD
   login: async (req, res) => {
@@ -143,8 +172,8 @@ const userController = {
     }
   },
   getData: async (req, res) => {
-    const { id } = await verifyToken(req.headers.token);
-    console.log('idToken', id)
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    const { id } = await verifyToken(token);
     try {
       if (id) {
         const user = await db.User.findOne({
@@ -176,34 +205,6 @@ const userController = {
     } catch (error) {
       return res.status(500).json({
         msg: 'Please contact the administrator',
-      });
-    }
-  },
-  delete: async (req, res) => {
-    const userId = Number(req.params.id);
-    try {
-      const user = await db.User.findOne({
-        where: {
-          id: userId,
-          is_deleted: false,
-        },
-      });
-
-      if (user) {
-        console.log('userToDel', user);
-        await user.update({ is_deleted: true });
-
-        res.json({
-          msg: 'The user has been soft-deleted',
-        });
-      } else {
-        res.status(404).json({
-          msg: `No users with id: ${userId}, were found !`,
-        });
-      }
-    } catch (error) {
-      return res.status(500).json({
-        msg: 'Pelase contact the administrator',
       });
     }
   },

@@ -69,7 +69,7 @@ const userValidator = {
     token: (req = request, res = response, next) => {
       const token = req.headers || req.cookies;
 
-      if (!token) {
+      if (!token.token) {
         return res.status(403).json({ error: 'No credentials sent!' });
       }
       next();

@@ -1,11 +1,12 @@
 const express = require('express');
 
 const router = express.Router();
-const { categoryList, categoryCreate, categoryEdit, categoryDetail, categoryDelete } = require('../controllers/categoryController');
+const {
+  categoryList, categoryCreate, categoryEdit, categoryDetail, categoryDelete,
+} = require('../controllers/categoryController');
 const categoryValidator = require('../validations/categories');
 const authAdmin = require('../middlewares/authAdmin');
 const awsImageUploader = require('../utils/awsImageUploader');
-
 
 // Categories list
 router.get('/', authAdmin, categoryList);
