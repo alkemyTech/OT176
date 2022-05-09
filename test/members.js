@@ -25,6 +25,13 @@ beforeEach((done) => {
     });
 });
 
+beforeEach( async () => {
+  await chai
+    .request(app)
+    .post('/members')
+    .send(testing.socialMediaTest);
+});
+
 beforeEach((done) => {
   chai
     .request(app)
@@ -77,18 +84,24 @@ describe('Member get endpoint', () => {
   describe('Put route', () => {
     describe('Checks if any of social media provided is in use', () => {
       it('Should return msg with wich social media is in use', () => {
-        beforeEach( async () => {
-          await chai
-            .request(app)
-            .post('/members')
-            .send(testing.socialMediaTest);
-        });
         chai
           .request(app)
           .post('/members')
           .send(testing.socialMediaTest)
           .end((err, res) => {
             expect(res).to.have.status(400);
+            expect(res).to.be.json;
+          });
+      });
+    });
+    describe('New member created', () => {
+      it('Should return an obj and status 200', () => {
+        chai
+          .request(app)
+          .post('/members')
+          .send(testing.uniqueMember)
+          .end((err, res) => {
+            expect(res).to.have.status(200);
             expect(res).to.be.json;
           });
       });
