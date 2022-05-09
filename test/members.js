@@ -8,20 +8,33 @@ const server = require('../app');
 const app = require('../app');
 const { User } = require('../models');
 const { createToken } = require('../utils/jwt');
+const testing = require('../utils/membersTest');
 
 chai.use(chaiHttp);
 
-const admin = {
-  email: 'test@test.com',
-  password: '1234',
-};
+let adminToken, userToken;
 
-const regularUser = {
-  email: 'dani11_21@hotmail.com',
-  password: 'Test@1234',
-};
+beforeEach((done) => {
+  chai
+    .request(app)
+    .post('/users/auth/login')
+    .send(testing.admin)
+    .end((err, res) => {
+      adminToken = res.body.token;
+      done();
+    });
+});
 
-let token;
+beforeEach((done) => {
+  chai
+    .request(app)
+    .post('/users/auth/login')
+    .send(testing.regularUser)
+    .end((err, res) => {
+      userToken = res.body.token;
+      done();
+    });
+});
 
 describe('Member get endpoint', () => {
   describe('Get route', () => {
@@ -37,16 +50,10 @@ describe('Member get endpoint', () => {
       });
       describe('isAdminRole unauthorized', () => {
         it('Should return user has not the privilegies', async () => {
-          const user = await User.findOne({
-            where: {
-              email: regularUser.email,
-            },
-          });
-          token = await createToken(user.id);
           chai
             .request(app)
             .get('/members')
-            .set('Authorization', `Bearer ${token}`)
+            .set('Authorization', `Bearer ${userToken}`)
             .end((err, res) => {
               expect(res).to.be.json;
               expect(res).to.have.status(401);
@@ -56,18 +63,33 @@ describe('Member get endpoint', () => {
     });
     describe('getAll members', () => {
       it('Should bring all users because of admin privilegies', async () => {
-        const user = await User.findOne({
-          where: {
-            email: admin.email,
-          },
-        });
-        token = await createToken(user.id);
         chai
           .request(app)
           .get('/members')
-          .set('Authorization', `Bearer ${token}`)
+          .set('Authorization', `Bearer ${adminToken}`)
           .end((err, res) => {
             expect(res).to.have.status(200);
+          });
+      });
+    });
+  });
+
+  describe('Put route', () => {
+    describe('Checks if any of social media provided is in use', () => {
+      it('Should return msg with wich social media is in use', () => {
+        beforeEach( async () => {
+          await chai
+            .request(app)
+            .post('/members')
+            .send(testing.socialMediaTest);
+        });
+        chai
+          .request(app)
+          .post('/members')
+          .send(testing.socialMediaTest)
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res).to.be.json;
           });
       });
     });
