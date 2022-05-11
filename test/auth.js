@@ -1,83 +1,191 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const { decode } = require('jsonwebtoken');
 const server = require('../app');
+const { expect } = require('chai').expect;
 
 chai.should();
 chai.use(chaiHttp);
 
-const userSignUp = {
+// Correct user for signup
+const userSignUp1 = {
   firstName: 'TestingFirstName',
   lastName: 'TestingLastName',
   email: 'testing@mail.com',
   password: 'Contra123456',
 };
 
-const userLogin = {
+// Bad user for signup
+const userSignUp2 = {
+  firstName: '32321',
+  lastName: 'TestingLastName',
+  email: 'testing',
+  password: 'C',
+};
+
+const userLogin1 = {
   email: 'testing@mail.com',
   password: 'Contra123456',
 };
 
+const userLogin2 = {
+  email: 'testing@mail.com',
+  password: '',
+};
+
+const userLogin3 = {
+  email: 'testing@mail.com',
+  password: 'Contra123',
+};
+
+const userLogin4 = {
+  email: 'wrong@mail.com',
+  password: 'errorLogin',
+};
+
+let token;
+
 /* eslint-disable */ 
-describe(' --------> Auth endpoints <-------- ', () => {
+describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
   // Signup test
-  describe(' --------> 1-POST /users/auth/signup <-------- ', () => {
-    it(' --------> You should signup <-------- ', (done) => {
-      chai.request(server)
+  describe(' ----------> POST /users/auth/signup', () => {
+    it('Signup: Successfully', (done) => {
+        chai.request(server)
         .post('/users/auth/signup')
-        .send(userSignUp)
+        .send(userSignUp1)
         .end((err, res) => {
-          token = res.body.token;
-          res.should.have.status(200);
-          done();
+           if(err) {
+            done(err);
+          } else {
+            token = res.body.token;
+            res.should.have.status(200);
+            done();
+          }
         });
-    });
+  });
+  it('Signup: Validation error', (done) => {
+      chai.request(server)
+      .post('/users/auth/signup')
+      .send(userSignUp2)
+      .end((err, res) => {
+         if(err) {
+          done(err);
+        } else {
+          token = res.body.token;
+          res.should.have.status(400);
+          done();
+        }
+      });
+});
+it('Signup: User already exists', (done) => {
+  chai.request(server)
+  .post('/users/auth/signup')
+  .send(userSignUp1)
+  .end((err, res) => {
+     if(err) {
+      done(err);
+    } else {
+      token = res.body.token;
+      res.should.have.status(409);
+      done();
+    }
+  });
+});
   });
 
-  //Login test
-  describe(' --------> 2-POST /users/auth/login <-------- ', () => {
-    it(' --------> You should login <-------- ', (done) => {
+  // Login test
+  describe(' ----------> POST /users/auth/login', () => {
+    it('Login: Successfully', (done) => {
       chai.request(server)
         .post('/users/auth/login')
-        .send(userLogin)
+        .send(userLogin1)
         .end((err, res) => {
-          token = res.body.token;
-          res.should.have.status(200);
-          done();
+          if (err) {
+            done(err);
+          } else {
+            token = res.body.token;
+            res.should.have.status(200);
+            done();
+          }
+        });
+    });
+    it('Login: Validation error', (done) => {
+      chai.request(server)
+        .post('/users/auth/login')
+        .send(userLogin2)
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          } else {
+            token = res.body.token;
+            res.should.have.status(400);
+            done();
+          }
+        });
+    });
+    it('Login: Wrong password', (done) => {
+      chai.request(server)
+        .post('/users/auth/login')
+        .send(userLogin3)
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          } else {
+            token = res.body.token;
+            res.should.have.status(401);
+            done();
+          }
+        });
+    });
+    it('Login: User not found', (done) => {
+      chai.request(server)
+        .post('/users/auth/login')
+        .send(userLogin4)
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          } else {
+            token = res.body.token;
+            res.should.have.status(404);
+            done();
+          }
         });
     });
   });
 
   // Get user logged data test
-  describe(' --------> 3-Login to fetch user logged data <-------- ', () => {
-    it(' --------> You should fetch data of logged user <-------- ', () => {
-      describe(' --------> POST /users/auth/login <-------- ', () => {
-        it(' --------> You should login <-------- ', () => {
-          before((done) => {
-          chai.request(server)
-            .post('/users/auth/login')
-            .send(userLogin)
-            .end((err, res) => {
+  describe(' ----------> GET /users/auth/me', () => {
+    it('Login: Successfully', (done) => {
+        chai.request(server)
+          .post('/users/auth/login')
+          .send(userLogin1)
+          .end((err, res) => {
+            if (err) {
+              done(err);
+            } else {
               token = res.body.token;
-              id = res.body.user.id;
               res.should.have.status(200);
               done();
-            });
+            }
+          });
+    });
+    it('Get logged user data: Successfully', (done) => {
+      chai.request(server)
+        .get('/users/auth/me')
+        .set({
+          Authorization: `Bearer ${token}`,
+          'content-type': 'application/x-www-form-urlencoded',
+        })
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          } else {
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('msg');
+            done();
+          }
         });
-      });
-      });
-      describe(' --------> GET /users/auth/me <-------- ', () => {
-        it(' --------> You should get data of logged user <-------- ', (done) => {
-          chai.request(server)
-            .get('/users/auth/me')
-            .set('token', token)
-            .end((err, res) => {
-              res.should.have.status(200);
-              res.body.should.be.a('object');
-              res.body.should.have.property('msg');
-              done();
-            });
-        });
-      });
     });
   });
 });

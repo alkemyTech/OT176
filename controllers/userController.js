@@ -78,7 +78,7 @@ const userController = {
       },
     }).then((possibleUser) => {
       if (possibleUser) {
-        res.json({ msg: 'User already exists' });
+        res.status(409).json({ msg: 'User already exists' });
       } else {
         db.User.create({
           firstName: req.body.firstName,
@@ -163,7 +163,9 @@ const userController = {
           });
         }
       } else {
-        res.json('User not found');
+        res.status(404).json({
+          msg: 'User not found',
+        });
       }
     } catch (error) {
       res.status(500).json({
