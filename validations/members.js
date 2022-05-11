@@ -10,7 +10,7 @@ const { verifyToken } = require('../utils/jwt');
 
 const memberValidation = {
   socialMediaInUse: async (req = request, res = response, next) => {
-    const { instagramUrl, facebookUrl, linkedinUrl } = req.body;
+    const { instagramUrl = true, facebookUrl = true, linkedinUrl = true } = req.body;
     const user = await Member.findOne({
       where: {
         [Op.or]: [
@@ -23,7 +23,6 @@ const memberValidation = {
         },
       },
     });
-    console.log(user);
     try {
       if (user) {
         // eslint-disable-next-line max-len
