@@ -1,13 +1,11 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const { decode } = require('jsonwebtoken');
 const server = require('../app');
-const { expect } = require('chai').expect;
 
 chai.should();
 chai.use(chaiHttp);
 
-// Correct user for signup
+// Correct signup
 const userSignUp1 = {
   firstName: 'TestingFirstName',
   lastName: 'TestingLastName',
@@ -15,7 +13,7 @@ const userSignUp1 = {
   password: 'Contra123456',
 };
 
-// Bad user for signup
+// Bad signup
 const userSignUp2 = {
   firstName: '32321',
   lastName: 'TestingLastName',
@@ -23,21 +21,25 @@ const userSignUp2 = {
   password: 'C',
 };
 
+// Correct login
 const userLogin1 = {
   email: 'testing@mail.com',
   password: 'Contra123456',
 };
 
+// Bad login: validations error
 const userLogin2 = {
   email: 'testing@mail.com',
   password: '',
 };
 
+// Bad login: wrong password
 const userLogin3 = {
   email: 'testing@mail.com',
   password: 'Contra123',
 };
 
+// Bad login: user not found
 const userLogin4 = {
   email: 'wrong@mail.com',
   password: 'errorLogin',
@@ -50,11 +52,11 @@ describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
   // Signup test
   describe(' ----------> POST /users/auth/signup', () => {
     it('Signup: Successfully', (done) => {
-        chai.request(server)
+      chai.request(server)
         .post('/users/auth/signup')
         .send(userSignUp1)
         .end((err, res) => {
-           if(err) {
+          if (err) {
             done(err);
           } else {
             token = res.body.token;
@@ -62,35 +64,35 @@ describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
             done();
           }
         });
-  });
-  it('Signup: Validation error', (done) => {
+    });
+    it('Signup: Validation error', (done) => {
       chai.request(server)
-      .post('/users/auth/signup')
-      .send(userSignUp2)
-      .end((err, res) => {
-         if(err) {
-          done(err);
-        } else {
-          token = res.body.token;
-          res.should.have.status(400);
-          done();
-        }
-      });
-});
-it('Signup: User already exists', (done) => {
-  chai.request(server)
-  .post('/users/auth/signup')
-  .send(userSignUp1)
-  .end((err, res) => {
-     if(err) {
-      done(err);
-    } else {
-      token = res.body.token;
-      res.should.have.status(409);
-      done();
-    }
-  });
-});
+        .post('/users/auth/signup')
+        .send(userSignUp2)
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          } else {
+            token = res.body.token;
+            res.should.have.status(400);
+            done();
+          }
+        });
+    });
+    it('Signup: User already exists', (done) => {
+      chai.request(server)
+        .post('/users/auth/signup')
+        .send(userSignUp1)
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          } else {
+            token = res.body.token;
+            res.should.have.status(409);
+            done();
+          }
+        });
+    });
   });
 
   // Login test
@@ -156,18 +158,18 @@ it('Signup: User already exists', (done) => {
   // Get user logged data test
   describe(' ----------> GET /users/auth/me', () => {
     it('Login: Successfully', (done) => {
-        chai.request(server)
-          .post('/users/auth/login')
-          .send(userLogin1)
-          .end((err, res) => {
-            if (err) {
-              done(err);
-            } else {
-              token = res.body.token;
-              res.should.have.status(200);
-              done();
-            }
-          });
+      chai.request(server)
+        .post('/users/auth/login')
+        .send(userLogin1)
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          } else {
+            token = res.body.token;
+            res.should.have.status(200);
+            done();
+          }
+        });
     });
     it('Get logged user data: Successfully', (done) => {
       chai.request(server)
