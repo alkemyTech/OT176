@@ -14,9 +14,12 @@ const memberController = {
           deletedAt: null,
         },
       });
+      const total = data.count;
+      const totalPages = total % limit === 0 ? total / limit : Math.floor(total / limit) + 1;
       res.status(200).json({
-        previousPage: `http://localhost:3000/members?page=${page <= 0 ? 0 : page - 1}`,
-        nextPage: `http://localhost:3000/members?page=${parseInt(page) + 1}`,
+        Pages: totalPages,
+        previousPage: `http://localhost:3000/members?page=${page <= 0 ? 0 : page > totalPages ? totalPages - 1 : page - 1}`,
+        nextPage: `http://localhost:3000/members?page=${page < totalPages - 1 ? parseInt(page) + 1 : totalPages - 1}`,
         data,
       });
     } catch (error) {
@@ -32,12 +35,13 @@ const memberController = {
     } = req.body;
 
     try {
-      await Member.create({
+      const member = await Member.create({
         name, facebookUrl, instagramUrl, linkedinUrl, image, description,
       });
 
       res.status(200).json({
         msg: 'Member created successfully!',
+        member,
       });
     } catch (error) {
       return res.status(400).json(
