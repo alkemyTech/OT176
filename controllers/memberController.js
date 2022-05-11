@@ -35,12 +35,13 @@ const memberController = {
     } = req.body;
 
     try {
-      await Member.create({
+      const member = await Member.create({
         name, facebookUrl, instagramUrl, linkedinUrl, image, description,
       });
 
       res.status(200).json({
         msg: 'Member created successfully!',
+        member,
       });
     } catch (error) {
       return res.status(400).json(

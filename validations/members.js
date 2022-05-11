@@ -58,7 +58,7 @@ const memberValidation = {
   isAdminRole: async (req = request, res = response, next) => {
     let error;
     const token = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : error = true;
-    if (error) return res.json({ msg: 'Credentials has not been sent' });
+    if (error) return res.status(401).json({ msg: 'Credentials has not been sent' });
     const { id } = await verifyToken(token);
     const user = await User.findOne({
       where: {
@@ -67,7 +67,7 @@ const memberValidation = {
     });
 
     if (user.roleId !== 1) {
-      return res.status(400).json({
+      return res.status(401).json({
         msg: 'User does not have the privilegies to do this',
       });
     }
