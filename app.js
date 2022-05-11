@@ -18,7 +18,7 @@ const backofficeRouter = require('./routes/backoffice');
 const categoriesRouter = require('./routes/categories');
 const organizationRouter = require('./routes/organization');
 const documentationRouter = require('./routes/documentation');
-const activitieRouter = require('./routes/activities')
+const activitieRouter = require('./routes/activities');
 
 const app = express();
 app.use(cors());

@@ -41,7 +41,7 @@ const newController = {
         success: false,
         error: 'Server Error',
       }); */
-      console.log('error', err)
+      console.log('error', err);
     }
   },
   // Update News
@@ -59,12 +59,11 @@ const newController = {
         });
       }
 
-      const newNews = await db.New.findByPk( req.params.id)
-      
+      const newNews = await db.New.findByPk(req.params.id);
 
       return res.status(201).json({
         success: true,
-        data: {newNews},
+        data: { newNews },
       });
     } catch (err) {
       return res.status(500).json({

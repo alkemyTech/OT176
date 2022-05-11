@@ -22,5 +22,4 @@ router.patch('/:id', authenticated, authOwnership('Comments'), update);
 /* DELETE comments */
 router.delete('/:id', authenticated, authOwnership('Comments'), deleteComment);
 
-
 module.exports = router;

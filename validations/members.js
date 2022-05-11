@@ -10,21 +10,20 @@ const { verifyToken } = require('../utils/jwt');
 
 const memberValidation = {
   socialMediaInUse: async (req = request, res = response, next) => {
-    const { instagramUrl, facebookUrl, linkedinUrl } = req.body;
-
-    try {
-      const user = await Member.findOne({
-        where: {
-          [Op.or]: [
-            { instagramUrl },
-            { facebookUrl },
-            { linkedinUrl },
-          ],
-          [Op.and]: {
-            is_deleted: false,
-          },
+    const { instagramUrl = true, facebookUrl = true, linkedinUrl = true } = req.body;
+    const user = await Member.findOne({
+      where: {
+        [Op.or]: [
+          { instagramUrl },
+          { facebookUrl },
+          { linkedinUrl },
+        ],
+        [Op.and]: {
+          deletedAt: null,
         },
-      });
+      },
+    });
+    try {
       if (user) {
         // eslint-disable-next-line max-len
         const socialMedia = instagramUrl == user.instagramUrl ? instagramUrl : facebookUrl == user.facebookUrl ? facebookUrl : linkedinUrl;
@@ -43,7 +42,6 @@ const memberValidation = {
       const member = await Member.findOne({
         where: {
           id,
-          is_deleted: false,
         },
       });
 
@@ -58,7 +56,10 @@ const memberValidation = {
     }
   },
   isAdminRole: async (req = request, res = response, next) => {
-    const { id } = await verifyToken(req.headers.token);
+    let error;
+    const token = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : error = true;
+    if (error) return res.status(401).json({ msg: 'Credentials has not been sent' });
+    const { id } = await verifyToken(token);
     const user = await User.findOne({
       where: {
         id,
@@ -66,7 +67,7 @@ const memberValidation = {
     });
 
     if (user.roleId !== 1) {
-      return res.status(400).json({
+      return res.status(401).json({
         msg: 'User does not have the privilegies to do this',
       });
     }

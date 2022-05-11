@@ -62,14 +62,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    is_deleted: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      defaultValue: false,
+    deletedAt: {
+      type: DataTypes.DATE,
     },
   }, {
-    timestamps: true,
     sequelize,
+    timestamps: true,
+    paranoid: true,
     modelName: 'Member',
   });
   return Member;

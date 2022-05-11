@@ -55,9 +55,9 @@ module.exports = {
         });
       }
 
-      const CommentUpdated = await Comments.findByPk(req.params.id)
+      const CommentUpdated = await Comments.findByPk(req.params.id);
 
-      return res.status(200).json({msg:'Comment successfully updated',data:CommentUpdated});
+      return res.status(200).json({ msg: 'Comment successfully updated', data: CommentUpdated });
     } catch (error) {
       return res.status(500).json(error);
     }

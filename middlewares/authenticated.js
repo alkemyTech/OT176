@@ -17,7 +17,7 @@ const authenticated = async (req, res, next) => {
     return next();
   } catch (error) {
     return res.status(401).json({
-      message: error,
+      message: error.message,
       error: 'Unauthorized',
       status: 401,
       data: null,

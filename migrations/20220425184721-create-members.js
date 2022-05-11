@@ -1,32 +1,46 @@
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
+  up: async (queryInterface, DataTypes) => {
     await queryInterface.createTable('Members', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
       },
       name: {
+        type: DataTypes.STRING,
         allowNull: false,
-        type: Sequelize.STRING,
+      },
+      facebookUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      instagramUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      linkedinUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       image: {
+        type: DataTypes.STRING,
         allowNull: false,
-        type: Sequelize.STRING,
       },
-      deleteAt: {
-
-        type: Sequelize.DATE,
+      description: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      deletedAt: {
+        type: DataTypes.DATE,
       },
       createdAt: {
-
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
       },
     });
   },
