@@ -5,7 +5,7 @@ const validate = require('../middlewares/validate');
 const authAdmin = require('../middlewares/authAdmin');
 const authOwnership = require('../middlewares/authOwnership');
 const {
-  fetchAll,
+  fetchAll, fetchOne,
   createComment, update, deleteComment,
 } = require('../controllers/commentsControllers');
 const commentValidator = require('../validations/comments');
@@ -15,6 +15,9 @@ router.post('/', authenticated, validate(commentValidator), createComment);
 
 /* GET COMMENTS */
 router.get('/', authenticated, authAdmin, fetchAll);
+
+/* GET ONE COMMENT */
+router.get('/:id', authenticated, authOwnership('Comments'), fetchOne);
 
 /* PATCH comments */
 router.patch('/:id', authenticated, authOwnership('Comments'), update);
