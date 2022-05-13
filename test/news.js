@@ -31,7 +31,7 @@ describe('Testing  API NEWS', () => {
       .post('/users/auth/login')
       .send({
         email: 'test@test.com',
-        password: '1234',
+        password: process.env.ADMIN_PASSWORD,
       })
       .end((err, res) => {
         token = res.body.token;
