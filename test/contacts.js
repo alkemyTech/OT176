@@ -2,7 +2,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app');
 
-const admin = { email: 'test@test.com', password: '1234' };
+const admin = { email: 'test@test.com', password: process.env.ADMIN_PASSWORD };
 const user = { email: 'user@test.com', name: 'Test user' };
 const unkonwnUser = { email: '', name: '' };
 
