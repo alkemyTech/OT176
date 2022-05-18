@@ -87,8 +87,8 @@ describe('Member endpoints', () => {
             .end((err, res) => {
               expect(res).to.be.json;
               expect(res).to.have.status(401);
-              done();
             });
+          done();
         });
       });
     });

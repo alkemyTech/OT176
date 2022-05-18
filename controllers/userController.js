@@ -210,6 +210,35 @@ const userController = {
       });
     }
   },
+
+  delete: async (req, res) => {
+    const userId = req.params.id;
+    try {
+      const user = await db.User.findOne({
+        where: {
+          id: userId,
+          deletedAt: null,
+        },
+      });
+
+      if (user) {
+        await user.destroy();
+
+        res.json({
+          msg: 'The user has been soft-deleted',
+        });
+      } else {
+        res.status(404).json({
+          msg: `No users with id: ${userId}, were found !`,
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        msg: 'Pelase contact the administrator',
+      });
+    }
+  },
+
   findById: async (id) => {
     try {
       const user = await db.User.findByPk(id);

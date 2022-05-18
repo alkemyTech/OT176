@@ -11,6 +11,10 @@ const authOwnership = (model = 'Comments') => async (req, res, next) => {
     const isAdmin = await db.User.findByPk(userId);
     if (isAdmin.roleId === 1) return next();
     const itemUser = await db[model].findByPk(itemId);
+
+    //Only Applies for Users model
+    if(itemUser.id === userId && model==='Users' ) return next();
+
     if (itemUser.user_id !== userId) return res.status(403).json({ message: 'Acceso Denegado' });
     return next();
   } catch (error) {

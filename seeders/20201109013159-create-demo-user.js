@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.bulkInsert('Users', [{
       firstName: 'Usuario',
       lastName: 'Demo',
-      email: 'test@test.com',
+      email: process.env.ADMIN_EMAIL,
       // Important: Password not encrypted yet!
       password: bcrypt.hashSync(process.env.ADMIN_PASSWORD, 10),
       roleId: 1,

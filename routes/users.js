@@ -15,6 +15,8 @@ const upload = require('../utils/multer');
 const awsImageUploader = require('../utils/awsImageUploader');
 const userAuth = require('../middlewares/authenticated');
 const imageValidator = require('../validations/image');
+const authenticated = require('../middlewares/authenticated');
+const authOwnership = require('../middlewares/authOwnership');
 
 // User list
 router.get('/users', authAdmin, userList);
@@ -27,8 +29,10 @@ router.post('/auth/signup', userValidation.signup, signup);
 // User login
 router.post('/auth/login', userValidation.login, login);
 // User delete
-router.put('/delete/:id', userDelete);
+//router.put('/delete/:id', userDelete);
 
 router.post('/auth/awsImgUpload', authAdmin, upload, imageValidator, awsImageUploader);
+
+router.delete('/:id', authenticated, authOwnership('User'), userController.delete);
 
 module.exports = router;
