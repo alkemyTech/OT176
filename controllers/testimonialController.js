@@ -1,22 +1,11 @@
 const { Testimonials } = require('../models');
+const { pagination } = require('../utils/paginate');
 
 const getTestimonials = async (req, res, next) => {
-  const { limit = 10, page = 0 } = req.query;
+  const { limit, page } = req.query;
   try {
-    const testimonials = await Testimonials.findAndCountAll({
-      limit: +limit,
-      offset: limit * page,
-    });
-    const { count: totalItems, rows: results } = testimonials;
-    const totalPages = Math.ceil(totalItems / limit);
-    res.json({
-      prevPage: page <= 0 ? '' : +page - 1,
-      nextPage: page >= totalPages ? '' : +page + 1,
-      currentPage: page ? +page : 0,
-      totalPages,
-      totalItems,
-      results,
-    });
+    const testimonials = await pagination(Testimonials, {}, page, limit);
+    res.json(testimonials);
   } catch (error) {
     next(error);
   }

@@ -41,9 +41,8 @@ const awsDelete = async (fullUrlImage) => {
   try {
     await s3.headObject(params).promise(); // found if exists
     await s3.deleteObject(params).promise();
-    return;
+    return true;
   } catch (err) {
-    // console.log(`${JSON.stringify(err)}`);
     throw new Error(err.message);
   }
 };

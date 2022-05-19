@@ -1,5 +1,5 @@
 const { Slides } = require('../models');
-const { awsUpload } = require('../utils/awsActions');
+const { awsUpload, awsDelete } = require('../utils/awsActions');
 
 const getSlides = async (req, res, next) => {
   try {
@@ -52,7 +52,7 @@ const updateSlide = async (req, res, next) => {
 
     if (typeof req.file !== 'undefined') {
       // if (imageUrl !== '') {
-      //   await awsDelete(imageUrl);
+      //   await awsDelete(imageUrl); // permissions need to be granted to delete the image
       // }
       imageUrl = await awsUpload(req.file);
     }
@@ -74,8 +74,8 @@ const deleteSlide = async (req, res, next) => {
     if (!id) throw new Error('Invalid Id');
     const slide = await Slides.findByPk(id);
     if (!slide) throw new Error('Item not found');
+    // await awsDelete(slide.imageUrl); // permissions need to be granted to delete the image
     await slide.destroy();
-    // await awsDelete(slide.imageUrl);
     res.json({ message: 'Delete Success', slide });
   } catch (error) {
     next(error);
